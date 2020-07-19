@@ -1,0 +1,47 @@
+{
+  "name": "@rbxts/promisify",
+  "version": "0.1.1",
+  "description": "Converts yielding methods into Promise methods. Has built-in exports for all yielding methods in the roblox api",
+  "scripts": {
+    "prepublishOnly": "npm run generate-builtins && npm run build",
+    "generate-builtins": "cd generator && tsc && node generateBuiltins.js",
+    "build": "cd roblox && rbxtsc-dev"
+  },
+  "keywords": [
+    "Roblox"
+  ],
+  "author": "Dionysusnu",
+  "license": "MIT",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dionysusnu/promisify.git"
+  },
+  "devDependencies": {
+    "@rbxts/types": "^1.0.373",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "axios": "^0.19.2",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-roblox-ts": "^0.0.8",
+    "prettier": "^2.0.5",
+    "roblox-ts": "^0.3.2",
+    "typescript": "^3.9.3"
+  },
+  "bugs": {
+    "url": "https://github.com/Dionysusnu/promisify/issues"
+  },
+  "homepage": "https://github.com/Dionysusnu/promisify#readme",
+  "main": "roblox/out/init.lua",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "lib": "roblox/src"
+  },
+  "files": [
+    "roblox/out"
+  ]
+}
