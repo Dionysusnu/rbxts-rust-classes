@@ -84,7 +84,7 @@ export class Result<T, E> {
 	}
 
 	public unwrap(): T | never {
-		return this.isOk() ? this.ok : error("called `Option.unwrap()` on an `Err` value");
+		return this.expect("called `Result.unwrap()` on an `Err` value");
 	}
 
 	public unwrapOr(def: T): T {

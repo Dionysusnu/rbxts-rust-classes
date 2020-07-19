@@ -27,7 +27,7 @@ export class Option<T extends defined> {
 	}
 
 	public unwrap(): T | never {
-		return this.isSome() ? this.value : error("called `Option.unwrap()` on a `None` value");
+		return this.expect("called `Option.unwrap()` on a `None` value");
 	}
 
 	public unwrapOr(def: T): T {
@@ -130,14 +130,14 @@ export class Option<T extends defined> {
 
 	public zip<U>(other: Option<U>): Option<[T, U]> {
 		if (this.isSome() && other.isSome()) {
-			return Option.some([this.value, other.value as U]);
+			return Option.some([this.value, other.value]);
 		}
 		return Option.none();
 	}
 
 	public zipWith<U, R>(other: Option<U>, func: (self: T, other: U) => R): Option<R> {
 		if (this.isSome() && other.isSome()) {
-			return Option.some(func(this.value, other.value as U));
+			return Option.some(func(this.value, other.value));
 		}
 		return Option.none();
 	}
