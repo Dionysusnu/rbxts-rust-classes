@@ -17,6 +17,7 @@
 
 		// optional
 		"declaration": true,
+		"incremental": true,
 
 		// optional, non-configurable
 		"jsx": "react",
