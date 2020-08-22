@@ -1,6 +1,6 @@
 {
   "name": "@rbxts/rust-option-result",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Typescript implementations of Rust's Option and Result types",
   "scripts": {
     "prepublishOnly": "npm run build",

@@ -1,2 +1,2 @@
-# promisify
-A simple library for converting yielding methods to promise returning methods.
+# rust-option-result
+A simple implementation of Rust's Option and Result enums
