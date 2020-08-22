@@ -1,6 +1,6 @@
 {
   "name": "@rbxts/rust-option-result",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Typescript implementations of Rust's Option and Result types",
   "scripts": {
     "prepublishOnly": "npm run build",
@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/Dionysusnu/Rbxts-Rust-OptionResult#readme",
   "main": "out/init.lua",
+  "types": "out/index.d.ts",
   "publishConfig": {
     "access": "public"
   },

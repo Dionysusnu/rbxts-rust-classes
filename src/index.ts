@@ -136,6 +136,16 @@ export class Option<T extends defined> {
 	public unwrapNone(): void | never {
 		if (this.isSome()) error("called `Option.unwrapNone()` on a `Some` value: " + tostring(this.value));
 	}
+
+	/**
+	 * Executes one of two callbacks based on the type of the contained value.
+	 * Replacement for Rust's `match` expression.
+	 * @param ifSome Callback executed when this Option contains a Some value.
+	 * @param ifNone Callback executed when this Result contains a None value.
+	 */
+	public match(ifSome: (val: T) => void, ifNone: () => void): void {
+		return this.isSome() ? ifSome(this.value) : ifNone();
+	}
 }
 
 export class Result<T, E> {
@@ -227,5 +237,15 @@ export class Result<T, E> {
 
 	public unwrapErr(): E | never {
 		return this.expectErr("called `Result.unwrapErr()` on an `Ok` value: " + tostring(this.ok));
+	}
+
+	/**
+	 * Executes one of two callbacks based on the type of the contained value.
+	 * Replacement for Rust's `match` expression.
+	 * @param ifOk Callback executed when this Result contains an Ok value.
+	 * @param ifErr Callback executed when this Result contains an Err value.
+	 */
+	public match(ifOk: (val: T) => void, ifErr: (err: E) => void): void {
+		return this.isOk() ? ifOk(this.ok) : ifErr(this.err as E);
 	}
 }
