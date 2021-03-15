@@ -149,7 +149,7 @@ export class Option<T extends defined> {
 }
 
 export class Result<T, E> {
-	private constructor(protected ok: T | undefined, protected err: E | undefined) {}
+	private constructor(protected okValue: T | undefined, protected errValue: E | undefined) {}
 
 	public static ok<R, E>(val: R): Result<R, E> {
 		return new Result<R, E>(val, undefined);
@@ -159,84 +159,84 @@ export class Result<T, E> {
 		return new Result<R, E>(undefined, val);
 	}
 
-	public isOk(): this is { ok: T; err: undefined } {
-		return this.ok !== undefined;
+	public isOk(): this is { okValue: T; errValue: undefined } {
+		return this.okValue !== undefined;
 	}
 
-	public isErr(): this is { ok: undefined; err: E } {
-		return this.err !== undefined;
+	public isErr(): this is { okValue: undefined; errValue: E } {
+		return this.errValue !== undefined;
 	}
 
 	public contains(x: T): boolean {
-		return this.ok === x;
+		return this.okValue === x;
 	}
 
 	public containsErr(x: E): boolean {
-		return this.err === x;
+		return this.errValue === x;
 	}
 
 	public okOption(): Option<T> {
-		return this.isOk() ? Option.some(this.ok) : Option.none();
+		return this.isOk() ? Option.some(this.okValue) : Option.none();
 	}
 
 	public errOption(): Option<E> {
-		return this.isErr() ? Option.some(this.err) : Option.none();
+		return this.isErr() ? Option.some(this.errValue) : Option.none();
 	}
 
 	public map<U>(func: (item: T) => U): Result<U, E> {
-		return this.isOk() ? Result.ok(func(this.ok)) : Result.err(this.err as E);
+		return this.isOk() ? Result.ok(func(this.okValue)) : Result.err(this.errValue as E);
 	}
 
 	public mapOr<U>(def: U, func: (item: T) => U): U {
-		return this.isOk() ? func(this.ok) : def;
+		return this.isOk() ? func(this.okValue) : def;
 	}
 
 	public mapOrElse<U>(def: (item: E) => U, func: (item: T) => U): U {
-		return this.isOk() ? func(this.ok) : def(this.err as E);
+		return this.isOk() ? func(this.okValue) : def(this.errValue as E);
 	}
 
 	public mapErr<F>(func: (item: E) => F): Result<T, F> {
-		return this.isErr() ? Result.err(func(this.err)) : Result.ok(this.ok as T);
+		return this.isErr() ? Result.err(func(this.errValue)) : Result.ok(this.okValue as T);
 	}
 
 	public and<U>(other: Result<U, E>): Result<U, E> {
-		return this.isErr() ? Result.err(this.err) : other;
+		return this.isErr() ? Result.err(this.errValue) : other;
 	}
 
 	public andThen<U>(func: (item: T) => Result<U, E>): Result<U, E> {
-		return this.isErr() ? Result.err(this.err) : func(this.ok as T);
+		return this.isErr() ? Result.err(this.errValue) : func(this.okValue as T);
 	}
 
 	public or<F>(other: Result<T, F>): Result<T, F> {
-		return this.isOk() ? Result.ok(this.ok) : other;
+		return this.isOk() ? Result.ok(this.okValue) : other;
 	}
 
 	public orElse<F>(other: (item: E) => Result<T, F>): Result<T, F> {
-		return this.isOk() ? Result.ok(this.ok) : other(this.err as E);
+		return this.isOk() ? Result.ok(this.okValue) : other(this.errValue as E);
 	}
 
 	public expect(msg: string): T | never {
-		return this.isOk() ? this.ok : error(msg);
+		return this.isOk() ? this.okValue : error(msg);
 	}
 
 	public unwrap(): T | never {
-		return this.expect("called `Result.unwrap()` on an `Err` value: " + tostring(this.err));
+		return this.expect("called `Result.unwrap()` on an `Err` value: " + tostring(this.errValue));
 	}
 
 	public unwrapOr(def: T): T {
-		return this.isOk() ? this.ok : def;
+		return this.isOk() ? this.okValue : def;
 	}
 
 	public unwrapOrElse(gen: () => T): T {
-		return this.isOk() ? this.ok : gen();
+		return this.isOk() ? this.okValue : gen();
 	}
 
 	public expectErr(msg: string): E | never {
-		return this.isErr() ? this.err : error(msg);
+		return this.isErr() ? this.errValue : error(msg);
 	}
 
 	public unwrapErr(): E | never {
-		return this.expectErr("called `Result.unwrapErr()` on an `Ok` value: " + tostring(this.ok));
+		return this.expectErr("called `Result.unwrapErr()` on an `Ok` value: " + tostring(this.okValue));
 	}
 
 	/**
@@ -246,6 +246,6 @@ export class Result<T, E> {
 	 * @param ifErr Callback executed when this Result contains an Err value.
 	 */
 	public match(ifOk: (val: T) => void, ifErr: (err: E) => void): void {
-		return this.isOk() ? ifOk(this.ok) : ifErr(this.err as E);
+		return this.isOk() ? ifOk(this.okValue) : ifErr(this.errValue as E);
 	}
 }
