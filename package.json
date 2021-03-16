@@ -1,7 +1,7 @@
 {
-  "name": "@rbxts/rust-option-result",
+  "name": "@rbxts/rust-classes",
   "version": "0.2.2",
-  "description": "Typescript implementations of Rust's Option and Result types",
+  "description": "Typescript implementations of Rust's std types",
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "rbxtsc-dev"

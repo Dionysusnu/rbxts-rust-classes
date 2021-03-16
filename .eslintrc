@@ -43,7 +43,10 @@
 		}],
 		"@typescript-eslint/no-misused-promises": "error",
 		"@typescript-eslint/no-unused-expressions": "warn",
+		"@typescript-eslint/no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars-experimental": "warn",
 		"prefer-const": "warn",
-		"roblox-ts/lua-truthiness": "off"
+		"roblox-ts/lua-truthiness": "off",
+		"roblox-ts/no-delete": "off"
 	}
 }
