@@ -38,15 +38,15 @@
 				"readonly": "generic"
 			}
 		],
+		"@typescript-eslint/explicit-member-accessibility": "warn",
 		"@typescript-eslint/no-floating-promises": ["error", {
 			"ignoreVoid": true
 		}],
 		"@typescript-eslint/no-misused-promises": "error",
 		"@typescript-eslint/no-unused-expressions": "warn",
 		"@typescript-eslint/no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars-experimental": "warn",
+		"@typescript-eslint/no-namespace": "off",
 		"prefer-const": "warn",
-		"roblox-ts/lua-truthiness": "off",
 		"roblox-ts/no-delete": "off"
 	}
 }
