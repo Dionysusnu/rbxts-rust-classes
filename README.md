@@ -1,2 +1,9 @@
-# rust-option-result
-A simple implementation of Rust's Option and Result enums
+# @rbxts/rust-classes
+
+Typescript implementations of Rust's std types
+
+Currently includes:
+
+-   Option\<T>
+-   Result<Ok, Err>
+-   Vec\<T>
