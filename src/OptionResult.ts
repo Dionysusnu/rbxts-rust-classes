@@ -1,5 +1,5 @@
 export class Option<T extends defined> {
-	public constructor(protected value: T | undefined) {}
+	public constructor(public value: T | undefined) {}
 
 	public static none<T extends defined>(): Option<T> {
 		return new Option<T>(undefined);

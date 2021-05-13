@@ -7,12 +7,7 @@
 		"sourceType": "module",
 		"project": "tsconfig.json"
 	},
-	"plugins": [
-		"roblox-ts",
-		"@typescript-eslint",
-		"@typescript-eslint/eslint-plugin",
-		"prettier"
-	],
+	"plugins": ["roblox-ts", "@typescript-eslint", "@typescript-eslint/eslint-plugin", "prettier"],
 	"extends": [
 		"plugin:@typescript-eslint/recommended",
 		"prettier/@typescript-eslint",
@@ -20,17 +15,7 @@
 		"plugin:roblox-ts/recommended"
 	],
 	"rules": {
-		"prettier/prettier": [
-			"warn",
-			{
-				"semi": true,
-				"trailingComma": "all",
-				"singleQuote": false,
-				"printWidth": 120,
-				"tabWidth": 4,
-				"useTabs": true
-			}
-		],
+		"prettier/prettier": "warn",
 		"@typescript-eslint/array-type": [
 			"warn",
 			{
@@ -39,9 +24,12 @@
 			}
 		],
 		"@typescript-eslint/explicit-member-accessibility": "warn",
-		"@typescript-eslint/no-floating-promises": ["error", {
-			"ignoreVoid": true
-		}],
+		"@typescript-eslint/no-floating-promises": [
+			"error",
+			{
+				"ignoreVoid": true
+			}
+		],
 		"@typescript-eslint/no-misused-promises": "error",
 		"@typescript-eslint/no-unused-expressions": "warn",
 		"@typescript-eslint/no-unused-vars": "off",
