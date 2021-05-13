@@ -149,7 +149,7 @@ export class Option<T extends defined> {
 	}
 }
 
-export class Result<T, E> {
+export class Result<T extends defined, E extends defined> {
 	private constructor(protected okValue: T | undefined, protected errValue: E | undefined) {}
 
 	public static ok<R, E>(val: R): Result<R, E> {
