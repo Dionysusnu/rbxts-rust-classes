@@ -138,6 +138,18 @@ export class Option<T extends defined> {
 		return this.expectNone("called `Option.unwrapNone()` on a `Some` value: " + tostring(this.value));
 	}
 
+	public transpose<R, E>(this: Option<Result<R, E>>): Result<Option<R>, E> {
+		return this.isSome()
+			? this.value.isOk()
+				? Result.ok(Option.some(this.value.unwrap()))
+				: Result.err(this.value.unwrapErr())
+			: Result.ok(Option.none());
+	}
+
+	public flatten<I>(this: Option<Option<I>>): Option<I> {
+		return this.isSome() ? new Option(this.value.value) : Option.none();
+	}
+
 	/**
 	 * Executes one of two callbacks based on the type of the contained value.
 	 * Replacement for Rust's `match` expression.
@@ -240,6 +252,14 @@ export class Result<T extends defined, E extends defined> {
 
 	public unwrapErr(): E | never {
 		return this.expectErr("called `Result.unwrapErr()` on an `Ok` value: " + tostring(this.okValue));
+	}
+
+	public transpose<R, E>(this: Result<Option<R>, E>): Option<Result<R, E>> {
+		return this.isOk() ? this.okValue.map((some) => Result.ok(some)) : Option.some(Result.err(this.errValue as E));
+	}
+
+	public flatten<R, E>(this: Result<Result<R, E>, E>): Result<R, E> {
+		return this.isOk() ? new Result(this.okValue.okValue, this.okValue.errValue) : Result.err(this.errValue as E);
 	}
 
 	/**
