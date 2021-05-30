@@ -172,6 +172,19 @@ export class Result<T extends defined, E extends defined> {
 		return new Result<R, E>(undefined, val);
 	}
 
+	public static fromCallback<T extends Callback>(c: T): Result<ReturnType<T>, string> {
+		const result = opcall(c);
+		return result.success ? Result.ok(result.value) : Result.err(result.error);
+	}
+
+	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, string>> {
+		try {
+			return Result.ok(await p);
+		} catch (e) {
+			return Result.err(e);
+		}
+	}
+
 	public isOk(): this is { okValue: T; errValue: undefined } {
 		return this.okValue !== undefined;
 	}
