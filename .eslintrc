@@ -34,7 +34,9 @@
 		"@typescript-eslint/no-unused-expressions": "warn",
 		"@typescript-eslint/no-unused-vars": "off",
 		"@typescript-eslint/no-namespace": "off",
+		"class-methods-use-this": "warn",
 		"prefer-const": "warn",
+		"roblox-ts/lua-truthiness": "off",
 		"roblox-ts/no-delete": "off"
 	}
 }
