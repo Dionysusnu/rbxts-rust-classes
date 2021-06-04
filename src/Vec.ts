@@ -2,7 +2,10 @@ import { Range, resolveRange } from "./types";
 import { Option } from "./OptionResult";
 
 export class Vec<T extends defined> {
-	private constructor(private array: Array<T> = [], private length = array.size()) {}
+	private length: number;
+	private constructor(private array: Array<T>) {
+		this.length = array.size();
+	}
 
 	public static withCapacity<T>(size: number): Vec<T> {
 		return new Vec(new Array(size));
@@ -11,17 +14,14 @@ export class Vec<T extends defined> {
 		return new Vec(values);
 	}
 
-	public i(i: number, failMessage: unknown = "called `Vec.i` with an out-of-range index: " + tostring(i)): T {
+	public i(i: number, failMessage?: unknown): T {
 		const val = this.array[i];
-		if (val === undefined) throw failMessage;
+		if (val === undefined) throw failMessage ?? "called `Vec.i` with an out-of-range index: " + tostring(i);
 		return val;
 	}
 
-	public truncate(
-		len: number,
-		failMessage: unknown = "called `Vec.truncate` with an out-of-range length: " + tostring(len),
-	): Vec<T> {
-		if (len < 0) throw failMessage;
+	public truncate(len: number, failMessage?: unknown): Vec<T> {
+		if (len < 0) throw failMessage ?? "called `Vec.truncate` with an out-of-range length: " + tostring(len);
 		for (let i = this.length - 1; i >= len; i--) {
 			delete this.array[i];
 		}
@@ -31,33 +31,22 @@ export class Vec<T extends defined> {
 	public asPtr(): Array<T> {
 		return this.array;
 	}
-	public setLen(len: number): Vec<T> {
-		this.length = len;
-		return this;
-	}
-	public swapRemove(
-		i: number,
-		failMessage: unknown = "called `Vec.swapRemove` with an out-of-range index: " + tostring(i),
-	): T {
-		if (i < 0 || i >= this.length) throw failMessage;
+	public swapRemove(i: number, failMessage?: unknown): T {
+		if (i < 0 || i >= this.length)
+			throw failMessage ?? "called `Vec.swapRemove` with an out-of-range index: " + tostring(i);
 		this.length--;
 		return this.array.unorderedRemove(i) as T;
 	}
-	public insert(
-		i: number,
-		element: T,
-		failMessage: unknown = "called `Vec.insert` with an out-of-range index: " + tostring(i),
-	): Vec<T> {
-		if (i < 0 || i > this.length) throw failMessage;
+	public insert(i: number, element: T, failMessage?: unknown): Vec<T> {
+		if (i < 0 || i > this.length)
+			throw failMessage ?? "called `Vec.insert` with an out-of-range index: " + tostring(i);
 		this.length++;
 		this.array.insert(i, element);
 		return this;
 	}
-	public remove(
-		i: number,
-		failMessage: unknown = "called `Vec.remove` with an out-of-range index: " + tostring(i),
-	): T {
-		if (i < 0 || i >= this.length) throw failMessage;
+	public remove(i: number, failMessage?: unknown): T {
+		if (i < 0 || i >= this.length)
+			throw failMessage ?? "called `Vec.remove` with an out-of-range index: " + tostring(i);
 		this.length--;
 		return this.array.remove(i) as T;
 	}
@@ -92,7 +81,6 @@ export class Vec<T extends defined> {
 						nextRead,
 						nextWrite,
 						`@rbxts/rust-classes internal error. Please submit a bug report! r=${nextRead} w=${nextWrite} a`,
-						`@rbxts/rust-classes internal error. Please submit a bug report! r=${nextRead} w=${nextWrite} b`,
 					);
 					nextWrite++;
 				}
@@ -124,17 +112,13 @@ export class Vec<T extends defined> {
 		other.clear();
 		return this;
 	}
-	public *drain(
-		r: Range,
-		failMessage: unknown = "called `Vec.drain` with an invalid `Range`: [" +
-			tostring(r[0]) +
-			", " +
-			tostring(r[1]) +
-			"]",
-	): Generator<T> {
+	public *drain(r: Range, failMessage?: unknown): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw failMessage;
+			throw (
+				failMessage ??
+				"called `Vec.drain` with an invalid `Range`: [" + tostring(r[0]) + ", " + tostring(r[1]) + "]"
+			);
 		}
 		const array: Array<T> = [];
 		for (let i = range[0]; i < range[1]; i++) {
@@ -154,11 +138,9 @@ export class Vec<T extends defined> {
 	public isEmpty(): boolean {
 		return this.length === 0;
 	}
-	public splitOff(
-		from: number,
-		failMessage: unknown = "called `Vec.splitOff` with an out-of-range index: " + tostring(from),
-	): Vec<T> {
-		if (from < 0 || from >= this.length) throw failMessage;
+	public splitOff(from: number, failMessage?: unknown): Vec<T> {
+		if (from < 0 || from >= this.length)
+			throw failMessage ?? "called `Vec.splitOff` with an out-of-range index: " + tostring(from);
 		let other: Vec<T>;
 		if (from === 0) {
 			other = new Vec([...this.array]);
@@ -192,18 +174,13 @@ export class Vec<T extends defined> {
 		}
 		return this;
 	}
-	public *splice(
-		r: Range,
-		iter: Generator<T>,
-		failMessage: unknown = "called `Vec.splice` with an invalid `Range`: [" +
-			tostring(r[0]) +
-			", " +
-			tostring(r[1]) +
-			"]",
-	): Generator<T> {
+	public *splice(r: Range, iter: Generator<T>, failMessage?: unknown): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw failMessage;
+			throw (
+				failMessage ??
+				"called `Vec.splice` with an invalid `Range`: [" + tostring(r[0]) + ", " + tostring(r[1]) + "]"
+			);
 		}
 		let i = range[0];
 		for (const item of iter) {
@@ -226,14 +203,9 @@ export class Vec<T extends defined> {
 	public get(i: number): Option<T> {
 		return new Option(this.array[i]);
 	}
-	public swap(
-		a: number,
-		b: number,
-		aFailMessage: unknown = "called `Vec.swap` with an out-of-range a: " + tostring(a),
-		bFailMessage: unknown = "called `Vec.swap` with an out-of-range b: " + tostring(b),
-	): Vec<T> {
-		if (a < 0 || a >= this.length) throw aFailMessage;
-		if (b < 0 || b >= this.length) throw bFailMessage;
+	public swap(a: number, b: number, failMessage?: unknown): Vec<T> {
+		if (a < 0 || a >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range a: " + tostring(a);
+		if (b < 0 || b >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range b: " + tostring(b);
 		const temp = this.array[a];
 		this.array[a] = this.array[b];
 		this.array[b] = temp;
@@ -245,8 +217,7 @@ export class Vec<T extends defined> {
 			this.swap(
 				i,
 				tries - i,
-				`@rbxts/rust-classes internal error. Please submit a bug report! tries=${tries} i=${i} a`,
-				`@rbxts/rust-classes internal error. Please submit a bug report! tries=${tries} i=${i} b`,
+				`@rbxts/rust-classes internal error. Please submit a bug report! tries=${tries} i=${i}`,
 			);
 		}
 		return this;
