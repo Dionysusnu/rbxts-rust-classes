@@ -102,7 +102,7 @@ export class Vec<T extends defined> {
 		return this;
 	}
 	public pop(): Option<T> {
-		return new Option(this.array[this.length - 1]);
+		return Option.wrap(this.array.pop());
 	}
 	public append(other: Vec<T>): Vec<T> {
 		for (const element of other.array) {
@@ -195,13 +195,13 @@ export class Vec<T extends defined> {
 		}
 	}
 	public first(): Option<T> {
-		return new Option(this.array[0]);
+		return Option.wrap(this.array[0]);
 	}
 	public last(): Option<T> {
-		return new Option(this.array[this.length - 1]);
+		return Option.wrap(this.array[this.length - 1]);
 	}
 	public get(i: number): Option<T> {
-		return new Option(this.array[i]);
+		return Option.wrap(this.array[i]);
 	}
 	public swap(a: number, b: number, failMessage?: unknown): Vec<T> {
 		if (a < 0 || a >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range a: " + tostring(a);
