@@ -102,6 +102,7 @@ export class Vec<T extends defined> {
 		return this;
 	}
 	public pop(): Option<T> {
+		this.length--;
 		return Option.wrap(this.array.pop());
 	}
 	public append(other: Vec<T>): Vec<T> {
