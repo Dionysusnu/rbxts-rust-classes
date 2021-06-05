@@ -1,11 +1,15 @@
 export class Option<T extends defined> {
-	public constructor(public value: T | undefined) {}
+	private constructor(protected value: T | undefined) {}
 
 	public static none<T extends defined>(): Option<T> {
 		return new Option<T>(undefined);
 	}
 
 	public static some<T extends defined>(val: T): Option<T> {
+		return new Option(val);
+	}
+
+	public static wrap<T extends defined>(val: T | undefined): Option<T> {
 		return new Option(val);
 	}
 
@@ -159,6 +163,13 @@ export class Option<T extends defined> {
 	public match(ifSome: (val: T) => void, ifNone: () => void): void {
 		return this.isSome() ? ifSome(this.value) : ifNone();
 	}
+
+	/**
+	 * Returns the contained value directly. Only meant for special cases like serialisation.
+	 */
+	public asPtr(): T | undefined {
+		return this.value;
+	}
 }
 
 export class Result<T extends defined, E extends defined> {
@@ -283,5 +294,9 @@ export class Result<T extends defined, E extends defined> {
 	 */
 	public match(ifOk: (val: T) => void, ifErr: (err: E) => void): void {
 		return this.isOk() ? ifOk(this.okValue) : ifErr(this.errValue as E);
+	}
+
+	public asPtr(): [T, undefined] | [undefined, E] {
+		return [this.okValue, this.errValue] as never;
 	}
 }
