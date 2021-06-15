@@ -1,3 +1,5 @@
+import { Unit } from "./Unit";
+
 export class Option<T extends defined> {
 	private constructor(protected value: T | undefined) {}
 
@@ -191,16 +193,30 @@ export class Result<T extends defined, E extends defined> {
 		return new Result<R, E>(undefined, val);
 	}
 
-	public static fromCallback<T extends Callback>(c: T): Result<ReturnType<T>, string> {
+	public static fromCallback<T extends defined>(c: () => T): Result<T, Option<defined>> {
 		const result = opcall(c);
-		return result.success ? Result.ok(result.value) : Result.err(result.error);
+		return result.success ? Result.ok(result.value) : Result.err(Option.wrap(result.error));
 	}
 
-	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, string>> {
+	public static fromVoidCallback(c: () => void): Result<Unit, Option<defined>> {
+		const result = opcall(c);
+		return result.success ? Result.ok(new Unit()) : Result.err(Option.wrap(result.error));
+	}
+
+	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, Option<defined>>> {
 		try {
 			return Result.ok(await p);
 		} catch (e) {
-			return Result.err(e);
+			return Result.err(Option.wrap(e!));
+		}
+	}
+
+	public static async fromVoidPromise(p: Promise<void>): Promise<Result<Unit, Option<defined>>> {
+		try {
+			await p;
+			return Result.ok(new Unit());
+		} catch (e) {
+			return Result.err(Option.wrap(e!));
 		}
 	}
 
