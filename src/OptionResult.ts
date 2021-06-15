@@ -304,8 +304,8 @@ export class Result<T extends defined, E extends defined> {
 		return this.isOk() ? ifOk(this.okValue) : ifErr(this.errValue as E);
 	}
 
-	public asPtr(): [T, undefined] | [undefined, E] {
-		return [this.okValue, this.errValue] as never;
+	public asPtr(): T | E {
+		return (this.okValue as T) ?? (this.errValue as E);
 	}
 }
 
