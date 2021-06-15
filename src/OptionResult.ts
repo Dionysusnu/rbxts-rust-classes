@@ -289,8 +289,8 @@ export class Result<T extends defined, E extends defined> {
 		return this.isOk() ? this.okValue : def;
 	}
 
-	public unwrapOrElse(gen: () => T): T {
-		return this.isOk() ? this.okValue : gen();
+	public unwrapOrElse(gen: (err: E) => T): T {
+		return this.isOk() ? this.okValue : gen(this.errValue as E);
 	}
 
 	public expectErr(msg: unknown): E | never {
