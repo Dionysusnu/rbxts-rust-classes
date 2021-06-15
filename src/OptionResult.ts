@@ -172,6 +172,14 @@ export class Option<T extends defined> {
 	}
 }
 
+const optionMeta = getmetatable(Option) as LuaMetatable<Option<never>>;
+optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
+optionMeta.__tostring = (option) =>
+	option.match(
+		(val) => `Option.some(${val})`,
+		() => "Option.none",
+	);
+
 export class Result<T extends defined, E extends defined> {
 	private constructor(protected okValue: T | undefined, protected errValue: E | undefined) {}
 
@@ -300,3 +308,15 @@ export class Result<T extends defined, E extends defined> {
 		return [this.okValue, this.errValue] as never;
 	}
 }
+
+const resultMeta = getmetatable(Result) as LuaMetatable<Result<never, never>>;
+resultMeta.__eq = (a, b) =>
+	b.match(
+		(ok) => a.contains(ok),
+		(err) => a.containsErr(err),
+	);
+resultMeta.__tostring = (result) =>
+	result.match(
+		(ok) => `Result.ok(${ok})`,
+		(err) => `Result.err(${err})`,
+	);
