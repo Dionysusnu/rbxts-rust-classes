@@ -160,7 +160,7 @@ export class Option<T extends defined> {
 	 * @param ifSome Callback executed when this Option contains a Some value.
 	 * @param ifNone Callback executed when this Option contains a None value.
 	 */
-	public match(ifSome: (val: T) => void, ifNone: () => void): void {
+	public match<R>(ifSome: (val: T) => R, ifNone: () => R): R {
 		return this.isSome() ? ifSome(this.value) : ifNone();
 	}
 
@@ -300,7 +300,7 @@ export class Result<T extends defined, E extends defined> {
 	 * @param ifOk Callback executed when this Result contains an Ok value.
 	 * @param ifErr Callback executed when this Result contains an Err value.
 	 */
-	public match(ifOk: (val: T) => void, ifErr: (err: E) => void): void {
+	public match<R>(ifOk: (val: T) => R, ifErr: (err: E) => R): R {
 		return this.isOk() ? ifOk(this.okValue) : ifErr(this.errValue as E);
 	}
 
