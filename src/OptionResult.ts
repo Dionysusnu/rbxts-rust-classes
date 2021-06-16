@@ -113,13 +113,13 @@ export class Option<T extends defined> {
 	public take(): Option<T> {
 		const val = this.value;
 		this.value = undefined;
-		return new Option(val);
+		return Option.wrap(val);
 	}
 
 	public replace(val: T): Option<T> {
 		const oldVal = this.value;
 		this.value = val;
-		return new Option(oldVal);
+		return Option.wrap(oldVal);
 	}
 
 	public zip<U>(other: Option<U>): Option<[T, U]> {
@@ -153,7 +153,7 @@ export class Option<T extends defined> {
 	}
 
 	public flatten<I>(this: Option<Option<I>>): Option<I> {
-		return this.isSome() ? new Option(this.value.value) : Option.none();
+		return this.isSome() ? Option.wrap(this.value.value) : Option.none();
 	}
 
 	/**
@@ -237,11 +237,11 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public okOption(): Option<T> {
-		return this.isOk() ? Option.some(this.okValue) : Option.none();
+		return Option.wrap(this.okValue);
 	}
 
 	public errOption(): Option<E> {
-		return this.isErr() ? Option.some(this.errValue) : Option.none();
+		return Option.wrap(this.errValue);
 	}
 
 	public map<U>(func: (item: T) => U): Result<U, E> {
