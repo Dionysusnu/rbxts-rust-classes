@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/rust-classes",
-	"version": "0.7.1",
+	"version": "0.8.0",
 	"description": "Typescript implementations of Rust's std types",
 	"scripts": {
 		"prepublishOnly": "npm run build",
