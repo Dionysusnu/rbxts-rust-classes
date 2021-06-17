@@ -3,7 +3,7 @@
 	"parserOptions": {
 		"jsx": true,
 		"useJSXTextNode": true,
-		"ecmaVersion": 2018,
+		"ecmaVersion": 2021,
 		"sourceType": "module",
 		"project": "tsconfig.json"
 	},
@@ -24,12 +24,6 @@
 			}
 		],
 		"@typescript-eslint/explicit-member-accessibility": "warn",
-		"@typescript-eslint/no-floating-promises": [
-			"error",
-			{
-				"ignoreVoid": true
-			}
-		],
 		"@typescript-eslint/no-misused-promises": "error",
 		"@typescript-eslint/no-unused-expressions": "warn",
 		"@typescript-eslint/no-unused-vars": "off",
