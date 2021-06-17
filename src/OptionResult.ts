@@ -1,4 +1,4 @@
-import { Unit } from "./Unit";
+import { unit, Unit } from "./Unit";
 
 export class Option<T extends defined> {
 	private constructor(protected value: T | undefined) {}
@@ -174,13 +174,21 @@ export class Option<T extends defined> {
 	}
 }
 
-const optionMeta = getmetatable(Option) as LuaMetatable<Option<never>>;
-optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
+const optionMeta = Option as LuaMetatable<Option<never>>;
+optionMeta.__unm = (option) => option.map((item) => -(item as number)) as Option<never>;
+optionMeta.__add = (option, other) => option.andThen((item) => other.map((otherItem) => (item + otherItem) as never));
+optionMeta.__sub = (option, other) => option.andThen((item) => other.map((otherItem) => (item - otherItem) as never));
+optionMeta.__mul = (option, other) => option.andThen((item) => other.map((otherItem) => (item * otherItem) as never));
+optionMeta.__div = (option, other) => option.andThen((item) => other.map((otherItem) => (item / otherItem) as never));
+optionMeta.__mod = (option, other) => option.andThen((item) => other.map((otherItem) => (item % otherItem) as never));
+optionMeta.__pow = (option, other) => option.andThen((item) => other.map((otherItem) => (item ^ otherItem) as never));
 optionMeta.__tostring = (option) =>
 	option.match(
 		(val) => `Option.some(${val})`,
 		() => "Option.none",
 	);
+optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
+optionMeta.__len = (option) => option.map((item) => (item as Array<never>).size()).unwrapOr(0);
 
 export class Result<T extends defined, E extends defined> {
 	private constructor(protected okValue: T | undefined, protected errValue: E | undefined) {}
@@ -200,7 +208,7 @@ export class Result<T extends defined, E extends defined> {
 
 	public static fromVoidCallback(c: () => void): Result<Unit, Option<defined>> {
 		const result = opcall(c);
-		return result.success ? Result.ok(new Unit()) : Result.err(Option.wrap(result.error));
+		return result.success ? Result.ok(unit()) : Result.err(Option.wrap(result.error));
 	}
 
 	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, Option<defined>>> {
@@ -214,7 +222,7 @@ export class Result<T extends defined, E extends defined> {
 	public static async fromVoidPromise(p: Promise<void>): Promise<Result<Unit, Option<defined>>> {
 		try {
 			await p;
-			return Result.ok(new Unit());
+			return Result.ok(unit());
 		} catch (e) {
 			return Result.err(Option.wrap(e!));
 		}
@@ -325,7 +333,7 @@ export class Result<T extends defined, E extends defined> {
 	}
 }
 
-const resultMeta = getmetatable(Result) as LuaMetatable<Result<never, never>>;
+const resultMeta = Result as LuaMetatable<Result<never, never>>;
 resultMeta.__eq = (a, b) =>
 	b.match(
 		(ok) => a.contains(ok),

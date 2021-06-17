@@ -1,5 +1,6 @@
 import { Range, resolveRange } from "./types";
 import { Option } from "./OptionResult";
+import { Iterator } from "./Iterator";
 
 export class Vec<T extends defined> {
 	private length: number;
@@ -13,15 +14,18 @@ export class Vec<T extends defined> {
 	public static vec<T>(...values: Array<T>): Vec<T> {
 		return new Vec(values);
 	}
+	public static fromPtr<T>(array: Array<T>): Vec<T> {
+		return new Vec(array);
+	}
 
 	public i(i: number, failMessage?: unknown): T {
 		const val = this.array[i];
-		if (val === undefined) throw failMessage ?? "called `Vec.i` with an out-of-range index: " + tostring(i);
+		if (val === undefined) throw failMessage ?? "called `Vec.i` with an out-of-range index: " + i;
 		return val;
 	}
 
 	public truncate(len: number, failMessage?: unknown): Vec<T> {
-		if (len < 0) throw failMessage ?? "called `Vec.truncate` with an out-of-range length: " + tostring(len);
+		if (len < 0) throw failMessage ?? "called `Vec.truncate` with an out-of-range length: " + len;
 		for (let i = this.length - 1; i >= len; i--) {
 			delete this.array[i];
 		}
@@ -225,10 +229,31 @@ export class Vec<T extends defined> {
 		}
 		return this;
 	}
-	public *iter(): Generator<T> {
+	public *generator(): Generator<T> {
 		let i = 0;
 		while (i < this.length) {
 			yield this.array[i++];
 		}
 	}
+	public iter(): Iterator<T> {
+		let i = 0;
+		return Iterator.fromRawParts(
+			() => {
+				return this.get(i).map((item) => {
+					i++;
+					return item;
+				});
+			},
+			() => {
+				return [this.len(), Option.some(this.len())] as LuaTuple<[number, Option<number>]>;
+			},
+		);
+	}
 }
+
+const vecMeta = Vec as LuaMetatable<Vec<never>>;
+vecMeta.__tostring = (vec) =>
+	`Vec[${(vec as Vec<string>) // Because reduce typings can't handle the first value being non-string
+		.iter()
+		.reduce((acc, item) => `${acc}, ${item}`)
+		.unwrapOr("")}]`;
