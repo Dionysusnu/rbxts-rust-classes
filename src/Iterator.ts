@@ -28,7 +28,12 @@ export class Iterator<T extends defined> {
 	}
 
 	public static fromItems<Item>(...items: Array<Item>): Iterator<Item> {
-		return Vec.vec(...items).iter();
+		const size = items.size();
+		let i = 0;
+		return new Iterator(
+			() => Option.wrap(items[i++]),
+			() => [size, Option.some(size)] as LuaTuple<[number, Option<number>]>,
+		);
 	}
 
 	private consume() {
