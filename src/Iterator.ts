@@ -86,7 +86,7 @@ export class Iterator<T extends defined> {
 			},
 			() => {
 				const [low, high] = this.sizeHint();
-				const firstSize = (step: number) => (n: number) => (n === 0 ? 0 : 1 + (n - 1) / step);
+				const firstSize = (step: number) => (n: number) => n === 0 ? 0 : 1 + (n - 1) / step;
 				const otherSize = (step: number) => (n: number) => n / step;
 				const f = (takeFirst ? firstSize : otherSize)(step);
 				return [f(low), high.map(f)] as LuaTuple<never>;
