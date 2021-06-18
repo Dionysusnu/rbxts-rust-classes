@@ -1,4 +1,11 @@
+import type { Iterator as IteratorType } from "./Iterator";
+import { lazyGet } from "./lazyLoad";
 import { unit, Unit } from "./Unit";
+
+declare let Iterator: typeof IteratorType;
+lazyGet("Iterator", (c) => {
+	Iterator = c;
+});
 
 export class Option<T extends defined> {
 	private constructor(protected value: T | undefined) {}
@@ -171,6 +178,17 @@ export class Option<T extends defined> {
 	 */
 	public asPtr(): T | undefined {
 		return this.value;
+	}
+
+	public clone(): Option<T> {
+		return Option.wrap(this.value);
+	}
+
+	public iter(): IteratorType<T> {
+		return Iterator.fromRawParts(
+			() => this.take(),
+			() => (this.isSome() ? [1, Option.some(1)] : [0, Option.none()]) as LuaTuple<[number, Option<number>]>,
+		);
 	}
 }
 
