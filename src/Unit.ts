@@ -9,4 +9,5 @@ export function unit(): Unit {
 const unitMeta = UnitClass as LuaMetatable<Unit>;
 unitMeta.__eq = () => false;
 unitMeta.__tostring = () => "()";
-unitMeta.__index = () => error("Attempt to index Unit", 2);
+const unitSuperMeta = getmetatable(UnitClass) as LuaMetatable<Unit>;
+unitSuperMeta.__index = () => error("Attempt to index Unit", 2);
