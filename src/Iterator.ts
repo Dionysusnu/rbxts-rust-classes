@@ -20,14 +20,14 @@ export class Iterator<T extends defined> {
 		this.sizeHint = sizeHint ?? DEFAULT_SIZE_HINT;
 	}
 
-	public static fromRawParts<Item>(
-		nextItem: () => Option<Item>,
+	public static fromRawParts<T extends defined>(
+		nextItem: () => Option<T>,
 		sizeHint: () => LuaTuple<[number, Option<number>]> = () => [0, Option.none()] as LuaTuple<never>,
-	): Iterator<Item> {
+	): Iterator<T> {
 		return new Iterator(nextItem, sizeHint);
 	}
 
-	public static fromItems<Item>(...items: Array<Item>): Iterator<Item> {
+	public static fromItems<T extends defined>(...items: Array<T>): Iterator<T> {
 		const size = items.size();
 		let i = 0;
 		return new Iterator(
@@ -37,7 +37,7 @@ export class Iterator<T extends defined> {
 	}
 
 	private consume() {
-		if (this.consumed) throw "Attempt to consume Iterator twice";
+		if (this.consumed) error("Attempt to consume Iterator twice", 2);
 		this.consumed = true;
 	}
 
@@ -78,7 +78,7 @@ export class Iterator<T extends defined> {
 
 	public stepBy(step: number): Iterator<T> {
 		this.consume();
-		if (step === 0) throw "called Iterator.stepBy with a step of 0";
+		if (step === 0) error("called Iterator.stepBy with a step of 0", 2);
 		let takeFirst = true;
 		return new Iterator(
 			() => {
