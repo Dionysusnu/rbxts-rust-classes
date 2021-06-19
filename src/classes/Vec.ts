@@ -272,7 +272,7 @@ export class Vec<T extends defined> {
 
 const vecMeta = Vec as LuaMetatable<Vec<never>>;
 vecMeta.__tostring = (vec) =>
-	`Vec[${(vec as Vec<string>) // Because reduce typings can't handle the first value being non-string
+	`Vec[${vec
 		.iter()
-		.reduce((acc, item) => `${acc}, ${item}`)
-		.unwrapOr("")}]`;
+		.fold("", (acc, item) => `${acc}${item}, `)
+		.sub(0, -3)}]`;
