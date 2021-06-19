@@ -6,17 +6,17 @@ import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
 import { unit, UnitType } from "../util/Unit";
 
-declare let Iterator: typeof IteratorType;
+let Iterator: typeof IteratorType;
 lazyGet("Iterator", (c) => {
 	Iterator = c;
 });
 
-declare let Option: typeof OptionType;
+let Option: typeof OptionType;
 lazyGet("Option", (c) => {
 	Option = c;
 });
 
-declare let Result: typeof ResultType;
+let Result: typeof ResultType;
 lazyGet("Result", (c) => {
 	Result = c;
 });
