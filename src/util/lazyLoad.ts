@@ -1,21 +1,19 @@
-import type { Iterator } from "./Iterator";
-import type { Option, Result } from "./OptionResult";
-import type { Unit } from "./Unit";
-import type { Vec } from "./Vec";
+import type { Iterator } from "../classes/Iterator";
+import type { Option } from "../classes/Option";
+import type { Result } from "../classes/Result";
+import type { Vec } from "../classes/Vec";
 
 interface ClassMap {
 	Iterator: typeof Iterator;
 	Option: typeof Option;
 	Result: typeof Result;
-	Unit: Unit;
 	Vec: typeof Vec;
 }
 
 const classes: Partial<Record<keyof ClassMap, ClassMap[keyof ClassMap]>> = {};
-const waiting: Partial<Record<
-	keyof ClassMap,
-	[Promise<ClassMap[keyof ClassMap]>, (c: ClassMap[keyof ClassMap]) => void]
->> = {};
+const waiting: Partial<
+	Record<keyof ClassMap, [Promise<ClassMap[keyof ClassMap]>, (c: ClassMap[keyof ClassMap]) => void]>
+> = {};
 
 export function lazyGet<T extends keyof ClassMap>(name: T, callback: (c: ClassMap[T]) => void): void {
 	const c = classes[name];

@@ -1,6 +1,25 @@
-import { Range, resolveRange } from "./types";
-import { Option } from "./OptionResult";
-import { Iterator } from "./Iterator";
+import type { Iterator as IteratorType } from "../classes/Iterator";
+import type { Option as OptionType } from "../classes/Option";
+import type { Result as ResultType } from "../classes/Result";
+
+import { lazyGet } from "../util/lazyLoad";
+import { Range, resolveRange } from "../util/Range";
+import { unit, UnitType } from "../util/Unit";
+
+declare let Iterator: typeof IteratorType;
+lazyGet("Iterator", (c) => {
+	Iterator = c;
+});
+
+declare let Option: typeof OptionType;
+lazyGet("Option", (c) => {
+	Option = c;
+});
+
+declare let Result: typeof ResultType;
+lazyGet("Result", (c) => {
+	Result = c;
+});
 
 export class Vec<T extends defined> {
 	private length: number;
@@ -105,7 +124,7 @@ export class Vec<T extends defined> {
 		this.array.push(element);
 		return this;
 	}
-	public pop(): Option<T> {
+	public pop(): OptionType<T> {
 		return Option.wrap(this.array.pop()).map((e) => {
 			this.length--;
 			return e;
@@ -201,13 +220,13 @@ export class Vec<T extends defined> {
 			range[1]--;
 		}
 	}
-	public first(): Option<T> {
+	public first(): OptionType<T> {
 		return Option.wrap(this.array[0]);
 	}
-	public last(): Option<T> {
+	public last(): OptionType<T> {
 		return Option.wrap(this.array[this.length - 1]);
 	}
-	public get(i: number): Option<T> {
+	public get(i: number): OptionType<T> {
 		return Option.wrap(this.array[i]);
 	}
 	public swap(a: number, b: number, failMessage?: unknown): Vec<T> {
@@ -235,7 +254,7 @@ export class Vec<T extends defined> {
 			yield this.array[i++];
 		}
 	}
-	public iter(): Iterator<T> {
+	public iter(): IteratorType<T> {
 		let i = 0;
 		return Iterator.fromRawParts(
 			() => {
@@ -245,7 +264,7 @@ export class Vec<T extends defined> {
 				});
 			},
 			() => {
-				return [this.len(), Option.some(this.len())] as LuaTuple<[number, Option<number>]>;
+				return [this.len(), Option.some(this.len())] as LuaTuple<[number, OptionType<number>]>;
 			},
 		);
 	}

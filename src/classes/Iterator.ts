@@ -1,28 +1,39 @@
-import { lazyGet } from "./lazyLoad";
-import { Option, Result } from "./OptionResult";
-import { unit, Unit } from "./Unit";
-import type { Vec as VecType } from "./Vec";
+import type { Option as OptionType } from "../classes/Option";
+import type { Result as ResultType } from "../classes/Result";
+import type { Vec as VecType } from "../classes/Vec";
 
-declare let Vec: typeof VecType;
-lazyGet("Vec", (vec) => {
-	Vec = vec;
+import { lazyGet } from "../util/lazyLoad";
+import { Range, resolveRange } from "../util/Range";
+import { unit, UnitType } from "../util/Unit";
+
+declare let Option: typeof OptionType;
+lazyGet("Option", (c) => {
+	Option = c;
 });
 
-const DEFAULT_SIZE_HINT = () => [0, Option.none()] as LuaTuple<never>;
+declare let Result: typeof ResultType;
+lazyGet("Result", (c) => {
+	Result = c;
+});
+
+declare let Vec: typeof VecType;
+lazyGet("Vec", (c) => {
+	Vec = c;
+});
+
+export type SizeHint = LuaTuple<[number, OptionType<number>]>;
+const DEFAULT_SIZE_HINT = () => [0, Option.none()] as SizeHint;
 
 export class Iterator<T extends defined> {
 	private consumed = false;
-	public sizeHint: () => LuaTuple<[number, Option<number>]>;
-	private constructor(
-		public nextItem: () => Option<T>,
-		sizeHint: (() => LuaTuple<[number, Option<number>]>) | undefined,
-	) {
+	public sizeHint: () => LuaTuple<[number, OptionType<number>]>;
+	private constructor(public nextItem: () => OptionType<T>, sizeHint: (() => SizeHint) | undefined) {
 		this.sizeHint = sizeHint ?? DEFAULT_SIZE_HINT;
 	}
 
 	public static fromRawParts<T extends defined>(
-		nextItem: () => Option<T>,
-		sizeHint: () => LuaTuple<[number, Option<number>]> = () => [0, Option.none()] as LuaTuple<never>,
+		nextItem: () => OptionType<T>,
+		sizeHint: () => LuaTuple<[number, OptionType<number>]> = () => [0, Option.none()] as SizeHint,
 	): Iterator<T> {
 		return new Iterator(nextItem, sizeHint);
 	}
@@ -32,7 +43,7 @@ export class Iterator<T extends defined> {
 		let i = 0;
 		return new Iterator(
 			() => Option.wrap(items[i++]),
-			() => [size, Option.some(size)] as LuaTuple<[number, Option<number>]>,
+			() => [size, Option.some(size)] as LuaTuple<[number, OptionType<number>]>,
 		);
 	}
 
@@ -50,7 +61,7 @@ export class Iterator<T extends defined> {
 		return i;
 	}
 
-	public last(): Option<T> {
+	public last(): OptionType<T> {
 		this.consume();
 		let last = Option.none<T>();
 		while (true) {
@@ -61,7 +72,7 @@ export class Iterator<T extends defined> {
 		return last;
 	}
 
-	public advanceBy(n: number): Result<Unit, number> {
+	public advanceBy(n: number): ResultType<UnitType, number> {
 		for (let i = 0; i < n; i++) {
 			if (this.nextItem().isNone()) {
 				return Result.err(i - 1);
@@ -70,7 +81,7 @@ export class Iterator<T extends defined> {
 		return Result.ok(unit());
 	}
 
-	public nth(n: number): Option<T> {
+	public nth(n: number): OptionType<T> {
 		return this.advanceBy(n)
 			.okOption()
 			.andThen(() => this.nextItem());
@@ -94,7 +105,7 @@ export class Iterator<T extends defined> {
 				const firstSize = (step: number) => (n: number) => n === 0 ? 0 : 1 + (n - 1) / step;
 				const otherSize = (step: number) => (n: number) => n / step;
 				const f = (takeFirst ? firstSize : otherSize)(step);
-				return [f(low), high.map(f)] as LuaTuple<never>;
+				return [f(low), high.map(f)] as SizeHint;
 			},
 		);
 	}
@@ -123,7 +134,7 @@ export class Iterator<T extends defined> {
 				return [
 					firstLow + lastLow,
 					firstHigh.andThen((firstSize) => lastHigh.map((lastSize) => firstSize + lastSize)),
-				] as LuaTuple<never>;
+				] as SizeHint;
 			},
 		);
 	}
@@ -150,7 +161,7 @@ export class Iterator<T extends defined> {
 							lastHigh.map((lastSize) => math.min(firstSize, lastSize)).unwrapOr(firstSize),
 						)
 						.or(lastHigh),
-				] as LuaTuple<never>;
+				] as SizeHint;
 			},
 		);
 	}
@@ -186,7 +197,7 @@ export class Iterator<T extends defined> {
 						return n * 2 - 1;
 					}
 				};
-				return [f(low), high.map(f)] as LuaTuple<never>;
+				return [f(low), high.map(f)] as SizeHint;
 			},
 		);
 	}
@@ -220,11 +231,11 @@ export class Iterator<T extends defined> {
 					}
 				}
 			},
-			() => [0, this.sizeHint()[1]] as LuaTuple<never>,
+			() => [0, this.sizeHint()[1]] as SizeHint,
 		);
 	}
 
-	public filterMap<U>(f: (item: T) => Option<U>): Iterator<U> {
+	public filterMap<U>(f: (item: T) => OptionType<U>): Iterator<U> {
 		this.consume();
 		return new Iterator(
 			() => {
@@ -236,7 +247,7 @@ export class Iterator<T extends defined> {
 					}
 				}
 			},
-			() => [0, this.sizeHint()[1]] as LuaTuple<never>,
+			() => [0, this.sizeHint()[1]] as SizeHint,
 		);
 	}
 
@@ -266,7 +277,7 @@ export class Iterator<T extends defined> {
 		}
 		return new Iterator(
 			() => this.nextItem(),
-			() => [0, this.sizeHint()[1]] as LuaTuple<never>,
+			() => [0, this.sizeHint()[1]] as SizeHint,
 		);
 	}
 
@@ -292,19 +303,19 @@ export class Iterator<T extends defined> {
 			},
 			() => {
 				if (done) {
-					return [0, Option.some(0)] as LuaTuple<never>;
+					return [0, Option.some(0)] as SizeHint;
 				} else {
-					return [0, this.sizeHint()[1]] as LuaTuple<never>;
+					return [0, this.sizeHint()[1]] as SizeHint;
 				}
 			},
 		);
 	}
 
-	public mapWhile<B>(f: (item: T) => Option<B>): Iterator<B> {
+	public mapWhile<B>(f: (item: T) => OptionType<B>): Iterator<B> {
 		this.consume();
 		return new Iterator(
 			() => this.nextItem().andThen(f),
-			() => [0, this.sizeHint()[1]] as LuaTuple<never>,
+			() => [0, this.sizeHint()[1]] as SizeHint,
 		);
 	}
 
@@ -322,7 +333,7 @@ export class Iterator<T extends defined> {
 			},
 			() => {
 				const [low, high] = this.sizeHint();
-				return [math.max(0, low - n), high.map((size) => math.max(0, size - n))] as LuaTuple<never>;
+				return [math.max(0, low - n), high.map((size) => math.max(0, size - n))] as SizeHint;
 			},
 		);
 	}
@@ -344,7 +355,7 @@ export class Iterator<T extends defined> {
 				return [
 					math.min(low, n),
 					high.andThen((size) => (size < n ? Option.some(size) : Option.none())).or(Option.some(n)),
-				] as LuaTuple<never>;
+				] as SizeHint;
 			},
 		);
 	}
@@ -353,13 +364,13 @@ export class Iterator<T extends defined> {
 	 * Only works correctly if the state is a reference.
 	 * Use `[number]` as your state if you want a primitive type as state.
 	 */
-	public scan<St, B>(state: St, f: (state: St, item: T) => Option<B>): Iterator<B> {
+	public scan<St, B>(state: St, f: (state: St, item: T) => OptionType<B>): Iterator<B> {
 		this.consume();
 		return new Iterator(
 			() => {
 				return this.nextItem().andThen((item) => f(state, item));
 			},
-			() => [0, this.sizeHint()[1]] as LuaTuple<never>,
+			() => [0, this.sizeHint()[1]] as SizeHint,
 		);
 	}
 
@@ -388,7 +399,7 @@ export class Iterator<T extends defined> {
 				if (this.sizeHint()[1].contains(0)) {
 					return curr.sizeHint();
 				} else {
-					return [curr.sizeHint()[0], Option.none()] as LuaTuple<never>;
+					return [curr.sizeHint()[0], Option.none()] as SizeHint;
 				}
 			},
 		);
@@ -415,9 +426,9 @@ export class Iterator<T extends defined> {
 			},
 			() => {
 				if (done) {
-					return [0, Option.some(0)] as LuaTuple<never>;
+					return [0, Option.some(0)] as SizeHint;
 				} else {
-					return [0, this.sizeHint()[1]] as LuaTuple<never>;
+					return [0, this.sizeHint()[1]] as SizeHint;
 				}
 			},
 		);
@@ -464,10 +475,10 @@ export class Iterator<T extends defined> {
 				falseVec.push(item);
 			}
 		});
-		return [trueVec, falseVec] as LuaTuple<never>;
+		return [trueVec, falseVec] as LuaTuple<[VecType<T>, VecType<T>]>;
 	}
 
-	public tryFold<B, E>(init: B, f: (acc: B, item: T) => Result<B, E>): Result<B, E> {
+	public tryFold<B, E>(init: B, f: (acc: B, item: T) => ResultType<B, E>): ResultType<B, E> {
 		let acc = Result.ok<B, E>(init);
 		let item = this.nextItem();
 		while (item.isSome()) {
@@ -480,7 +491,7 @@ export class Iterator<T extends defined> {
 		return acc;
 	}
 
-	public tryForEach<E>(f: (item: T) => Result<Unit, E>): Result<Unit, E> {
+	public tryForEach<E>(f: (item: T) => ResultType<UnitType, E>): ResultType<UnitType, E> {
 		return this.tryFold(unit(), (_, item) => f(item));
 	}
 
@@ -495,7 +506,7 @@ export class Iterator<T extends defined> {
 		return acc;
 	}
 
-	public reduce(f: (acc: T, item: T) => T): Option<T> {
+	public reduce(f: (acc: T, item: T) => T): OptionType<T> {
 		const first = this.nextItem();
 		return first
 			.map((item) => this.fold(item, f))
@@ -527,7 +538,7 @@ export class Iterator<T extends defined> {
 		return false;
 	}
 
-	public find(f: (item: T) => boolean): Option<T> {
+	public find(f: (item: T) => boolean): OptionType<T> {
 		let item = this.nextItem();
 		while (item.isSome()) {
 			if (f(item.unwrap())) {
@@ -538,7 +549,7 @@ export class Iterator<T extends defined> {
 		return Option.none();
 	}
 
-	public findMap<B>(f: (item: T) => Option<B>): Option<B> {
+	public findMap<B>(f: (item: T) => OptionType<B>): OptionType<B> {
 		let item = this.nextItem();
 		while (item.isSome()) {
 			const result = f(item.unwrap());
@@ -550,7 +561,7 @@ export class Iterator<T extends defined> {
 		return Option.none();
 	}
 
-	public tryFind<R>(f: (item: T) => Result<boolean, R>): Result<Option<T>, R> {
+	public tryFind<R>(f: (item: T) => ResultType<boolean, R>): ResultType<OptionType<T>, R> {
 		let item = this.nextItem();
 		while (item.isSome()) {
 			const result = f(item.unwrap());
@@ -565,7 +576,7 @@ export class Iterator<T extends defined> {
 		return Result.ok(Option.none());
 	}
 
-	public position(f: (item: T) => boolean): Option<number> {
+	public position(f: (item: T) => boolean): OptionType<number> {
 		let item = this.nextItem();
 		let i = 0;
 		while (item.isSome()) {
@@ -578,19 +589,19 @@ export class Iterator<T extends defined> {
 		return Option.none();
 	}
 
-	public max(this: Iterator<number>): Option<number> {
+	public max(this: Iterator<number>): OptionType<number> {
 		return this.reduce((a, b) => (b >= a ? b : a));
 	}
 
-	public min(this: Iterator<number>): Option<number> {
+	public min(this: Iterator<number>): OptionType<number> {
 		return this.reduce((a, b) => (b < a ? b : a));
 	}
 
-	public maxByKey(f: (item: T) => number): Option<T> {
+	public maxByKey(f: (item: T) => number): OptionType<T> {
 		return this.reduce((a, b) => (f(b) >= f(a) ? b : a));
 	}
 
-	public minByKey(f: (item: T) => number): Option<T> {
+	public minByKey(f: (item: T) => number): OptionType<T> {
 		return this.reduce((a, b) => (f(b) < f(a) ? b : a));
 	}
 
@@ -607,7 +618,7 @@ export class Iterator<T extends defined> {
 	 *
 	 * For example, `(a, b) => a - b` will return the largest element.
 	 */
-	public maxBy(f: (a: T, b: T) => number): Option<T> {
+	public maxBy(f: (a: T, b: T) => number): OptionType<T> {
 		return this.reduce((a, b) => (f(a, b) >= 0 ? a : b));
 	}
 
@@ -623,7 +634,7 @@ export class Iterator<T extends defined> {
 			rightVec.push(b);
 			item = this.nextItem();
 		}
-		return [leftVec, rightVec] as LuaTuple<never>;
+		return [leftVec, rightVec] as LuaTuple<[VecType<A>, VecType<B>]>;
 	}
 
 	public sum(this: Iterator<number>): number {
@@ -678,7 +689,7 @@ export class Iterator<T extends defined> {
 	 *
 	 * For example, `(a, b) => a - b` will return the largest element.
 	 */
-	public isSortedBy(f: (a: T, b: T) => Option<number>): boolean {
+	public isSortedBy(f: (a: T, b: T) => OptionType<number>): boolean {
 		this.consume();
 		const lastOpt = this.nextItem();
 		if (lastOpt.isNone()) {
