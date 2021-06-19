@@ -7,7 +7,7 @@ import { Option } from "./classes/Option";
 lazyRegister("Option", Option);
 
 import { Result } from "./classes/Result";
-lazyRegister("Vec", Vec);
+lazyRegister("Result", Result);
 
 import { Vec } from "./classes/Vec";
 lazyRegister("Vec", Vec);

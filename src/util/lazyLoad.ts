@@ -27,6 +27,8 @@ export function lazyGet<T extends keyof ClassMap>(name: T, callback: (c: ClassMa
 			const prom = new Promise<ClassMap[keyof ClassMap]>((resolve) => {
 				waiting[name] = [prom, resolve];
 			});
+			const waiter = waiting[name] as [Promise<ClassMap[keyof ClassMap]>, (c: ClassMap[keyof ClassMap]) => void];
+			waiter[0] = prom;
 			prom.then((c) => callback(c as ClassMap[T]));
 		}
 	}
