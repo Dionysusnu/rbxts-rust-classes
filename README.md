@@ -5,5 +5,6 @@ Typescript implementations of Rust's std types
 Currently includes:
 
 -   Option\<T>
--   Result<Ok, Err>
+-   Result\<Ok, Err>
 -   Vec\<T>
+-   Iterator\<T>
