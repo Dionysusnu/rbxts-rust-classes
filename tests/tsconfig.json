@@ -1,5 +1,4 @@
 {
-	"include": ["./src"],
 	"compilerOptions": {
 		// required
 		"allowSyntheticDefaultImports": true,
@@ -14,9 +13,9 @@
 		// required, configurable
 		"rootDir": "src",
 		"outDir": "out",
-		"baseUrl": "src",
+		"baseUrl": "../src",
 		// optional
-		"declaration": true,
+		"declaration": false,
 		"incremental": false,
 		// "tsBuildInfoFile": "out/tsconfig.tsbuildinfo",
 		// optional, non-configurable

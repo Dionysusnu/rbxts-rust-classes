@@ -5,7 +5,7 @@
 		"useJSXTextNode": true,
 		"ecmaVersion": 2021,
 		"sourceType": "module",
-		"project": "tsconfig.json"
+		"project": ["tsconfig.json", "tests/tsconfig.json"]
 	},
 	"plugins": ["roblox-ts", "@typescript-eslint", "@typescript-eslint/eslint-plugin", "prettier"],
 	"extends": [

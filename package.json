@@ -4,7 +4,13 @@
 	"description": "Typescript implementations of Rust's std types",
 	"scripts": {
 		"prepublishOnly": "npm run build",
-		"build": "rbxtsc-dev"
+		"build": "rbxtsc-dev",
+		"test": "npm run build && npm run test-setup && npm run test-link && npm run test-compile && npm run test-rojo && npm run test-run",
+		"test-setup": "cd tests && npm install @rbxts/types@latest @rbxts/compiler-types@latest",
+		"test-link": "npm link && cd tests && npm link @rbxts/rust-classes",
+		"test-compile": "cd tests && rbxtsc-dev",
+		"test-rojo": "rojo build tests -o ./tests/test.rbxlx",
+		"test-run": "run-in-roblox --place ./tests/test.rbxlx --script ./tests/out/main.server.lua"
 	},
 	"keywords": [
 		"Roblox"
@@ -17,6 +23,7 @@
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^1.0.0-types.0",
+		"@rbxts/testez": "^0.3.1-ts.6",
 		"@rbxts/types": "^1.0.463",
 		"@typescript-eslint/eslint-plugin": "^3.10.1",
 		"@typescript-eslint/parser": "^3.10.1",

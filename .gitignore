@@ -118,3 +118,6 @@ dist
 # Rojo/roblox-ts
 include/
 out/
+
+# Test place
+test.rbxlx
