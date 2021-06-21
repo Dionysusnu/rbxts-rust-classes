@@ -22,7 +22,7 @@ lazyGet("Vec", (c) => {
 });
 
 export class Result<T extends defined, E extends defined> {
-	private constructor(protected okValue: T | undefined, protected errValue: E | undefined) {}
+	private constructor(protected readonly okValue: T | undefined, protected readonly errValue: E | undefined) {}
 
 	public static ok<R, E>(val: R): Result<R, E> {
 		return new Result<R, E>(val, undefined);
