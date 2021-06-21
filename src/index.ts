@@ -6,6 +6,8 @@ lazyRegister("Iterator", Iterator);
 import { Option } from "./classes/Option";
 lazyRegister("Option", Option);
 
+import { OptionMut } from "./classes/OptionMut";
+
 import { Result } from "./classes/Result";
 lazyRegister("Result", Result);
 
@@ -15,4 +17,4 @@ lazyRegister("Vec", Vec);
 import { Range } from "./util/Range";
 import { UnitType, unit } from "./util/Unit";
 
-export { Option, Iterator, Result, Range, Vec, unit, UnitType };
+export { Option, OptionMut, Iterator, Result, Range, Vec, unit, UnitType };

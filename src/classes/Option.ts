@@ -22,7 +22,7 @@ lazyGet("Vec", (c) => {
 });
 
 export class Option<T extends defined> {
-	private constructor(protected value: T | undefined) {}
+	protected constructor(protected readonly value: T | undefined) {}
 
 	public static none<T extends defined>(): Option<T> {
 		return new Option<T>(undefined);
@@ -85,13 +85,6 @@ export class Option<T extends defined> {
 		return this.isSome() ? Result.ok(this.value) : Result.err(err());
 	}
 
-	public iter(): IteratorType<T> {
-		return Iterator.fromRawParts(
-			() => this.take(),
-			() => (this.isSome() ? [1, Option.some(1)] : [0, Option.none()]) as LuaTuple<[number, Option<number>]>,
-		);
-	}
-
 	public and<U>(other: Option<U>): Option<U> {
 		return this.isNone() ? Option.none() : other;
 	}
@@ -120,38 +113,6 @@ export class Option<T extends defined> {
 			: other.isSome()
 			? Option.some(other.value)
 			: Option.none();
-	}
-
-	public insert(val: T): T {
-		return (this.value = val);
-	}
-
-	public getOrInsert(val: T): T {
-		if (!this.isSome()) {
-			return (this.value = val);
-		} else {
-			return this.value;
-		}
-	}
-
-	public getOrInsertWith(val: () => T): T {
-		if (!this.isSome()) {
-			return (this.value = val());
-		} else {
-			return this.value;
-		}
-	}
-
-	public take(): Option<T> {
-		const val = this.value;
-		this.value = undefined;
-		return Option.wrap(val);
-	}
-
-	public replace(val: T): Option<T> {
-		const oldVal = this.value;
-		this.value = val;
-		return Option.wrap(oldVal);
 	}
 
 	public zip<U>(other: Option<U>): Option<[T, U]> {
