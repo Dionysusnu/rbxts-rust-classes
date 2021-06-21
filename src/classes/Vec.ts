@@ -141,14 +141,25 @@ export class Vec<T extends defined> {
 	public *drain(r: Range, failMessage?: unknown): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw (
-				failMessage ??
-				"called `Vec.drain` with an invalid `Range`: [" + tostring(r[0]) + ", " + tostring(r[1]) + "]"
-			);
+			throw failMessage ?? `called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
 		}
 		const array: Array<T> = [];
 		for (let i = range[0]; i < range[1]; i++) {
 			array.push(this.remove(range[0]));
+		}
+		let i = 0;
+		while (i < array.size()) yield array[i++];
+	}
+	public *drainFilter(r: Range, filter: (element: T) => boolean, failMessage?: unknown): Generator<T> {
+		const range = resolveRange(r, this.length);
+		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
+			throw failMessage ?? `called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
+		}
+		const array: Array<T> = [];
+		let skipped = 0;
+		for (let i = range[0]; i < range[1]; i++) {
+			if (filter(this.i(range[0] + skipped))) array.push(this.remove(range[0] + skipped));
+			else skipped++;
 		}
 		let i = 0;
 		while (i < array.size()) yield array[i++];
