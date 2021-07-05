@@ -48,7 +48,7 @@ export class Iterator<T extends defined> {
 	}
 
 	private consume() {
-		if (this.consumed) error("Attempt to consume Iterator twice", 2);
+		if (this.consumed) error("Attempt to consume Iterator twice", 3);
 		this.consumed = true;
 	}
 
