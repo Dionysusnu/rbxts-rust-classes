@@ -33,13 +33,13 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public static fromCallback<T extends defined>(c: () => T): Result<T, OptionType<defined>> {
-		const result = opcall(c);
-		return result.success ? Result.ok(result.value) : Result.err(Option.wrap(result.error));
+		const [success, result] = pcall(c);
+		return success ? Result.ok(result as T) : Result.err(Option.wrap(result));
 	}
 
 	public static fromVoidCallback(c: () => void): Result<UnitType, OptionType<defined>> {
-		const result = opcall(c);
-		return result.success ? Result.ok(unit()) : Result.err(Option.wrap(result.error));
+		const [success, result] = pcall(c);
+		return success ? Result.ok(unit()) : Result.err(Option.wrap(result!));
 	}
 
 	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, OptionType<defined>>> {
