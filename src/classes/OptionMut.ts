@@ -50,7 +50,7 @@ export class OptionMut<T> extends Option<T> {
 		if (!this.isSome()) {
 			return (this.value = val);
 		} else {
-			return this.value;
+			return this.value as T;
 		}
 	}
 
@@ -58,7 +58,7 @@ export class OptionMut<T> extends Option<T> {
 		if (!this.isSome()) {
 			return (this.value = val());
 		} else {
-			return this.value;
+			return this.value as T;
 		}
 	}
 
