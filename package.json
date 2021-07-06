@@ -20,7 +20,7 @@
 	"license": "MPL-2.0",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Dionysusnu/Rbxts-Rust-OptionResult.git"
+		"url": "git+https://github.com/Dionysusnu/rbxts-rust-classes.git"
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^1.0.0-types.0",
@@ -37,9 +37,9 @@
 		"typescript": "^4.3.4"
 	},
 	"bugs": {
-		"url": "https://github.com/Dionysusnu/Rbxts-Rust-OptionResult/issues"
+		"url": "https://github.com/Dionysusnu/rbxts-rust-classes/issues"
 	},
-	"homepage": "https://github.com/Dionysusnu/Rbxts-Rust-OptionResult#readme",
+	"homepage": "https://github.com/Dionysusnu/rbxts-rust-classes#readme",
 	"main": "out/init.lua",
 	"types": "out/index.d.ts",
 	"publishConfig": {
