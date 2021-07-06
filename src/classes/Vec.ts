@@ -55,21 +55,18 @@ export class Vec<T extends defined> {
 		return this.array;
 	}
 	public swapRemove(i: number, failMessage?: unknown): T {
-		if (i < 0 || i >= this.length)
-			throw failMessage ?? "called `Vec.swapRemove` with an out-of-range index: " + tostring(i);
+		if (i < 0 || i >= this.length) throw failMessage ?? "called `Vec.swapRemove` with an out-of-range index: " + i;
 		this.length--;
 		return this.array.unorderedRemove(i) as T;
 	}
 	public insert(i: number, element: T, failMessage?: unknown): Vec<T> {
-		if (i < 0 || i > this.length)
-			throw failMessage ?? "called `Vec.insert` with an out-of-range index: " + tostring(i);
+		if (i < 0 || i > this.length) throw failMessage ?? "called `Vec.insert` with an out-of-range index: " + i;
 		this.length++;
 		this.array.insert(i, element);
 		return this;
 	}
 	public remove(i: number, failMessage?: unknown): T {
-		if (i < 0 || i >= this.length)
-			throw failMessage ?? "called `Vec.remove` with an out-of-range index: " + tostring(i);
+		if (i < 0 || i >= this.length) throw failMessage ?? "called `Vec.remove` with an out-of-range index: " + i;
 		this.length--;
 		return this.array.remove(i) as T;
 	}
@@ -177,7 +174,7 @@ export class Vec<T extends defined> {
 	}
 	public splitOff(from: number, failMessage?: unknown): Vec<T> {
 		if (from < 0 || from >= this.length)
-			throw failMessage ?? "called `Vec.splitOff` with an out-of-range index: " + tostring(from);
+			throw failMessage ?? "called `Vec.splitOff` with an out-of-range index: " + from;
 		let other: Vec<T>;
 		if (from === 0) {
 			other = new Vec([...this.array]);
@@ -214,10 +211,7 @@ export class Vec<T extends defined> {
 	public *splice(r: Range, iter: Generator<T>, failMessage?: unknown): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw (
-				failMessage ??
-				"called `Vec.splice` with an invalid `Range`: [" + tostring(r[0]) + ", " + tostring(r[1]) + "]"
-			);
+			throw failMessage ?? `called \`Vec.splice\` with an invalid \`Range\`: ${r[0]}..${r[1]}`;
 		}
 		let i = range[0];
 		for (const item of iter) {
@@ -241,8 +235,8 @@ export class Vec<T extends defined> {
 		return Option.wrap(this.array[i]);
 	}
 	public swap(a: number, b: number, failMessage?: unknown): Vec<T> {
-		if (a < 0 || a >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range a: " + tostring(a);
-		if (b < 0 || b >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range b: " + tostring(b);
+		if (a < 0 || a >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range a: " + a;
+		if (b < 0 || b >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range b: " + b;
 		const temp = this.array[a];
 		this.array[a] = this.array[b];
 		this.array[b] = temp;
