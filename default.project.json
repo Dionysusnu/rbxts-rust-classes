@@ -2,6 +2,12 @@
 	"name": "rust-classes",
 	"tree": {
 		"$className": "Folder",
-		"out": { "$path": "out" }
+		"out": { "$path": "out" },
+		"node_modules": {
+			"$className": "Folder",
+			"@rbxts": {
+				"$path": "node_modules/@rbxts"
+			}
+		}
 	}
 }

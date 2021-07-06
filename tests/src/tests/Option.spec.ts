@@ -3,6 +3,26 @@
 import { Option, Result } from "@rbxts/rust-classes";
 
 export = () => {
+	it("Option.===", () => {
+		expect(Option.some(1) === Option.some(1)).to.equal(true);
+		expect(Option.none() === Option.some(1)).to.equal(false);
+		expect(Option.some(1) === Option.none()).to.equal(false);
+		expect(Option.wrap(1) === Option.wrap(1)).to.equal(true);
+		expect(Option.wrap(undefined) === Option.wrap(1)).to.equal(false);
+		expect(Option.wrap(1) === Option.wrap(undefined)).to.equal(false);
+	});
+	it("Option.none", () => {
+		expect(Option.none().isNone()).to.equal(true);
+		expect(Option.none().isSome()).to.equal(false);
+	});
+	it("Option.some", () => {
+		expect(Option.some(1).isNone()).to.equal(false);
+		expect(Option.some(1).isSome()).to.equal(true);
+	});
+	it("Option.wrap", () => {
+		expect(Option.wrap(undefined).isNone()).to.equal(true);
+		expect(Option.wrap(1).isSome()).to.equal(true);
+	});
 	it("Option.isSome", () => {
 		expect(Option.some(1).isSome()).to.equal(true);
 		expect(Option.none().isSome()).to.equal(false);
