@@ -59,11 +59,11 @@ export class Result<T extends defined, E extends defined> {
 		}
 	}
 
-	public isOk(): this is { okValue: T; errValue: undefined } {
+	public isOk(): boolean {
 		return this.okValue !== undefined;
 	}
 
-	public isErr(): this is { okValue: undefined; errValue: E } {
+	public isErr(): boolean {
 		return this.errValue !== undefined;
 	}
 
@@ -84,39 +84,39 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public map<U>(func: (item: T) => U): Result<U, E> {
-		return this.isOk() ? Result.ok(func(this.okValue)) : Result.err(this.errValue as E);
+		return this.isOk() ? Result.ok(func(this.okValue as T)) : Result.err(this.errValue as E);
 	}
 
 	public mapOr<U>(def: U, func: (item: T) => U): U {
-		return this.isOk() ? func(this.okValue) : def;
+		return this.isOk() ? func(this.okValue as T) : def;
 	}
 
 	public mapOrElse<U>(def: (item: E) => U, func: (item: T) => U): U {
-		return this.isOk() ? func(this.okValue) : def(this.errValue as E);
+		return this.isOk() ? func(this.okValue as T) : def(this.errValue as E);
 	}
 
 	public mapErr<F>(func: (item: E) => F): Result<T, F> {
-		return this.isErr() ? Result.err(func(this.errValue)) : Result.ok(this.okValue as T);
+		return this.isErr() ? Result.err(func(this.errValue as E)) : Result.ok(this.okValue as T);
 	}
 
 	public and<U>(other: Result<U, E>): Result<U, E> {
-		return this.isErr() ? Result.err(this.errValue) : other;
+		return this.isErr() ? Result.err(this.errValue as E) : other;
 	}
 
 	public andThen<U>(func: (item: T) => Result<U, E>): Result<U, E> {
-		return this.isErr() ? Result.err(this.errValue) : func(this.okValue as T);
+		return this.isErr() ? Result.err(this.errValue as E) : func(this.okValue as T);
 	}
 
 	public or<F>(other: Result<T, F>): Result<T, F> {
-		return this.isOk() ? Result.ok(this.okValue) : other;
+		return this.isOk() ? Result.ok(this.okValue as T) : other;
 	}
 
 	public orElse<F>(other: (item: E) => Result<T, F>): Result<T, F> {
-		return this.isOk() ? Result.ok(this.okValue) : other(this.errValue as E);
+		return this.isOk() ? Result.ok(this.okValue as T) : other(this.errValue as E);
 	}
 
 	public expect(msg: unknown): T | never {
-		if (this.isOk()) return this.okValue;
+		if (this.isOk()) return this.okValue as T;
 		else throw msg;
 	}
 
@@ -125,15 +125,15 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public unwrapOr(def: T): T {
-		return this.isOk() ? this.okValue : def;
+		return this.isOk() ? (this.okValue as T) : def;
 	}
 
 	public unwrapOrElse(gen: (err: E) => T): T {
-		return this.isOk() ? this.okValue : gen(this.errValue as E);
+		return this.isOk() ? (this.okValue as T) : gen(this.errValue as E);
 	}
 
 	public expectErr(msg: unknown): E | never {
-		if (this.isErr()) return this.errValue;
+		if (this.isErr()) return this.errValue as E;
 		else throw msg;
 	}
 
@@ -142,11 +142,11 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public transpose<R, E>(this: Result<OptionType<R>, E>): OptionType<Result<R, E>> {
-		return this.isOk() ? this.okValue.map((some) => Result.ok(some)) : Option.some(Result.err(this.errValue as E));
+		return this.isOk() ? this.okValue!.map((some) => Result.ok(some)) : Option.some(Result.err(this.errValue as E));
 	}
 
 	public flatten<R, E>(this: Result<Result<R, E>, E>): Result<R, E> {
-		return this.isOk() ? new Result(this.okValue.okValue, this.okValue.errValue) : Result.err(this.errValue as E);
+		return this.isOk() ? new Result(this.okValue!.okValue, this.okValue!.errValue) : Result.err(this.errValue as E);
 	}
 
 	/**
@@ -156,7 +156,7 @@ export class Result<T extends defined, E extends defined> {
 	 * @param ifErr Callback executed when this Result contains an Err value.
 	 */
 	public match<R>(ifOk: (val: T) => R, ifErr: (err: E) => R): R {
-		return this.isOk() ? ifOk(this.okValue) : ifErr(this.errValue as E);
+		return this.isOk() ? ifOk(this.okValue as T) : ifErr(this.errValue as E);
 	}
 
 	public asPtr(): T | E {

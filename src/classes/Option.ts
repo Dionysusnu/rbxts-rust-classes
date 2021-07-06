@@ -36,11 +36,11 @@ export class Option<T extends defined> {
 		return new Option(val);
 	}
 
-	public isSome(): this is { value: T } {
+	public isSome(): boolean {
 		return this.value !== undefined;
 	}
 
-	public isNone(): this is { value: undefined } {
+	public isNone(): boolean {
 		return !this.isSome();
 	}
 
@@ -49,7 +49,7 @@ export class Option<T extends defined> {
 	}
 
 	public expect(msg: unknown): T | never {
-		if (this.isSome()) return this.value;
+		if (this.isSome()) return this.value as T;
 		else throw msg;
 	}
 
@@ -58,31 +58,31 @@ export class Option<T extends defined> {
 	}
 
 	public unwrapOr(def: T): T {
-		return this.isSome() ? this.value : def;
+		return this.isSome() ? (this.value as T) : def;
 	}
 
 	public unwrapOrElse(gen: () => T): T {
-		return this.isSome() ? this.value : gen();
+		return this.isSome() ? (this.value as T) : gen();
 	}
 
 	public map<U>(func: (item: T) => U): Option<U> {
-		return this.isSome() ? Option.some(func(this.value)) : Option.none();
+		return this.isSome() ? Option.some(func(this.value as T)) : Option.none();
 	}
 
 	public mapOr<U>(def: U, func: (item: T) => U): U {
-		return this.isSome() ? func(this.value) : def;
+		return this.isSome() ? func(this.value as T) : def;
 	}
 
 	public mapOrElse<U>(def: () => U, func: (item: T) => U): U {
-		return this.isSome() ? func(this.value) : def();
+		return this.isSome() ? func(this.value as T) : def();
 	}
 
 	public okOr<E>(err: E): ResultType<T, E> {
-		return this.isSome() ? Result.ok(this.value) : Result.err(err);
+		return this.isSome() ? Result.ok(this.value as T) : Result.err(err);
 	}
 
 	public okOrElse<E>(err: () => E): ResultType<T, E> {
-		return this.isSome() ? Result.ok(this.value) : Result.err(err());
+		return this.isSome() ? Result.ok(this.value as T) : Result.err(err());
 	}
 
 	public and<U>(other: Option<U>): Option<U> {
@@ -90,41 +90,41 @@ export class Option<T extends defined> {
 	}
 
 	public andThen<U>(other: (val: T) => Option<U>): Option<U> {
-		return this.isSome() ? other(this.value) : Option.none();
+		return this.isSome() ? other(this.value as T) : Option.none();
 	}
 
 	public filter(func: (val: T) => boolean): Option<T> {
-		return this.isSome() ? (func(this.value) ? Option.some(this.value) : Option.none()) : Option.none();
+		return this.isSome() ? (func(this.value as T) ? Option.some(this.value as T) : Option.none()) : Option.none();
 	}
 
 	public or(other: Option<T>): Option<T> {
-		return this.isSome() ? Option.some(this.value) : other;
+		return this.isSome() ? Option.some(this.value as T) : other;
 	}
 
 	public orElse(other: () => Option<T>): Option<T> {
-		return this.isSome() ? Option.some(this.value) : other();
+		return this.isSome() ? Option.some(this.value as T) : other();
 	}
 
 	public xor(other: Option<T>): Option<T> {
 		return this.isSome()
 			? other.isSome()
 				? Option.none()
-				: Option.some(this.value)
+				: Option.some(this.value as T)
 			: other.isSome()
-			? Option.some(other.value)
+			? Option.some(other.value as T)
 			: Option.none();
 	}
 
 	public zip<U>(other: Option<U>): Option<[T, U]> {
 		if (this.isSome() && other.isSome()) {
-			return Option.some([this.value, other.value]);
+			return Option.some([this.value as T, other.value as U]);
 		}
 		return Option.none();
 	}
 
 	public zipWith<U, R>(other: Option<U>, func: (self: T, other: U) => R): Option<R> {
 		if (this.isSome() && other.isSome()) {
-			return Option.some(func(this.value, other.value));
+			return Option.some(func(this.value as T, other.value as U));
 		}
 		return Option.none();
 	}
@@ -139,14 +139,14 @@ export class Option<T extends defined> {
 
 	public transpose<R, E>(this: Option<ResultType<R, E>>): ResultType<Option<R>, E> {
 		return this.isSome()
-			? this.value.isOk()
-				? Result.ok(Option.some(this.value.unwrap()))
-				: Result.err(this.value.unwrapErr())
+			? this.value!.isOk()
+				? Result.ok(Option.some(this.value!.unwrap()))
+				: Result.err(this.value!.unwrapErr())
 			: Result.ok(Option.none());
 	}
 
 	public flatten<I>(this: Option<Option<I>>): Option<I> {
-		return this.isSome() ? Option.wrap(this.value.value) : Option.none();
+		return this.isSome() ? Option.wrap(this.value!.value) : Option.none();
 	}
 
 	/**
@@ -156,7 +156,7 @@ export class Option<T extends defined> {
 	 * @param ifNone Callback executed when this Option contains a None value.
 	 */
 	public match<R>(ifSome: (val: T) => R, ifNone: () => R): R {
-		return this.isSome() ? ifSome(this.value) : ifNone();
+		return this.isSome() ? ifSome(this.value as T) : ifNone();
 	}
 
 	/**
