@@ -24,11 +24,11 @@ lazyGet("Vec", (c) => {
 export class Result<T extends defined, E extends defined> {
 	private constructor(protected readonly okValue: T | undefined, protected readonly errValue: E | undefined) {}
 
-	public static ok<R, E>(val: R): Result<R, E> {
+	public static ok<R extends defined, E extends defined>(val: R): Result<R, E> {
 		return new Result<R, E>(val, undefined);
 	}
 
-	public static err<R, E>(val: E): Result<R, E> {
+	public static err<R extends defined, E extends defined>(val: E): Result<R, E> {
 		return new Result<R, E>(undefined, val);
 	}
 
