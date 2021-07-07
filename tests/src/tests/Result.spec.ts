@@ -1,4 +1,5 @@
 /// <reference types="@rbxts/testez/globals" />
+declare function itFIXME(phrase: string, callback: () => void): void;
 
 import { Option, Result } from "@rbxts/rust-classes";
 
@@ -31,7 +32,7 @@ export = () => {
 			Result.fromCallback<number>(() => error()) === Result.err<number, Option<number>>(Option.none()),
 		).to.equal(true);
 	});
-	it("Result.fromPromise", () => {
+	itFIXME("Result.fromPromise", () => {
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).to.equal(Result.ok(1));
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).never.to.equal(
 			Result.err<number, Option<number>>(Option.some(1)),
