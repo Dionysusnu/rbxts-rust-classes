@@ -36,10 +36,10 @@ export = () => {
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).never.to.equal(
 			Result.err<number, Option<number>>(Option.some(1)),
 		);
-		expect(Result.fromPromise<defined>(new Promise(() => error(pairs as never))).await()[1]).to.equal(
-			Result.err(Option.some(pairs)),
-		);
-		expect(Result.fromPromise<defined>(new Promise(() => error())).await()[1]).to.equal(
+		expect(
+			Result.fromPromise<defined>(new Promise((_resolve, reject) => reject(pairs as never))).await()[1],
+		).to.equal(Result.err(Option.some(pairs)));
+		expect(Result.fromPromise<defined>(new Promise((_resolve, reject) => reject())).await()[1]).to.equal(
 			Result.err<number, Option<number>>(Option.none()),
 		);
 	});
