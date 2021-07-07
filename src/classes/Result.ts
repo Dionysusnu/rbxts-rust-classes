@@ -105,7 +105,7 @@ export class Result<T extends defined, E extends defined> {
 		return this.isErr() ? Result.err(this.errValue as E) : other;
 	}
 
-	public andThen<U>(func: (item: T) => Result<U, E>): Result<U, E> {
+	public andWith<U>(func: (item: T) => Result<U, E>): Result<U, E> {
 		return this.isErr() ? Result.err(this.errValue as E) : func(this.okValue as T);
 	}
 

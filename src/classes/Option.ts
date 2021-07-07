@@ -89,7 +89,7 @@ export class Option<T extends defined> {
 		return this.isNone() ? Option.none() : other;
 	}
 
-	public andThen<U>(other: (val: T) => Option<U>): Option<U> {
+	public andWith<U>(other: (val: T) => Option<U>): Option<U> {
 		return this.isSome() ? other(this.value as T) : Option.none();
 	}
 
@@ -169,12 +169,12 @@ export class Option<T extends defined> {
 
 const optionMeta = Option as unknown as LuaMetatable<Option<never>> & { PROMISE_IGNORE: unknown };
 optionMeta.__unm = (option) => option.map((item) => -(item as number)) as Option<never>;
-optionMeta.__add = (option, other) => option.andThen((item) => other.map((otherItem) => (item + otherItem) as never));
-optionMeta.__sub = (option, other) => option.andThen((item) => other.map((otherItem) => (item - otherItem) as never));
-optionMeta.__mul = (option, other) => option.andThen((item) => other.map((otherItem) => (item * otherItem) as never));
-optionMeta.__div = (option, other) => option.andThen((item) => other.map((otherItem) => (item / otherItem) as never));
-optionMeta.__mod = (option, other) => option.andThen((item) => other.map((otherItem) => (item % otherItem) as never));
-optionMeta.__pow = (option, other) => option.andThen((item) => other.map((otherItem) => (item ^ otherItem) as never));
+optionMeta.__add = (option, other) => option.andWith((item) => other.map((otherItem) => (item + otherItem) as never));
+optionMeta.__sub = (option, other) => option.andWith((item) => other.map((otherItem) => (item - otherItem) as never));
+optionMeta.__mul = (option, other) => option.andWith((item) => other.map((otherItem) => (item * otherItem) as never));
+optionMeta.__div = (option, other) => option.andWith((item) => other.map((otherItem) => (item / otherItem) as never));
+optionMeta.__mod = (option, other) => option.andWith((item) => other.map((otherItem) => (item % otherItem) as never));
+optionMeta.__pow = (option, other) => option.andWith((item) => other.map((otherItem) => (item ^ otherItem) as never));
 optionMeta.__tostring = (option) =>
 	option.match(
 		(val) => `Option.some(${val})`,

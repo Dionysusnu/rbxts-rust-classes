@@ -84,7 +84,7 @@ export class Iterator<T extends defined> {
 	public nth(n: number): OptionType<T> {
 		return this.advanceBy(n)
 			.okOption()
-			.andThen(() => this.nextItem());
+			.andWith(() => this.nextItem());
 	}
 
 	public stepBy(step: number): Iterator<T> {
@@ -133,7 +133,7 @@ export class Iterator<T extends defined> {
 				const [lastLow, lastHigh] = other.sizeHint();
 				return [
 					firstLow + lastLow,
-					firstHigh.andThen((firstSize) => lastHigh.map((lastSize) => firstSize + lastSize)),
+					firstHigh.andWith((firstSize) => lastHigh.map((lastSize) => firstSize + lastSize)),
 				] as SizeHint;
 			},
 		);
@@ -241,7 +241,7 @@ export class Iterator<T extends defined> {
 			() => {
 				while (true) {
 					const item = this.nextItem();
-					const mapped = item.andThen(f);
+					const mapped = item.andWith(f);
 					if (mapped.isSome()) {
 						return mapped;
 					}
@@ -314,7 +314,7 @@ export class Iterator<T extends defined> {
 	public mapWhile<B>(f: (item: T) => OptionType<B>): Iterator<B> {
 		this.consume();
 		return new Iterator(
-			() => this.nextItem().andThen(f),
+			() => this.nextItem().andWith(f),
 			() => [0, this.sizeHint()[1]] as SizeHint,
 		);
 	}
@@ -354,7 +354,7 @@ export class Iterator<T extends defined> {
 				const [low, high] = this.sizeHint();
 				return [
 					math.min(low, n),
-					high.andThen((size) => (size < n ? Option.some(size) : Option.none())).or(Option.some(n)),
+					high.andWith((size) => (size < n ? Option.some(size) : Option.none())).or(Option.some(n)),
 				] as SizeHint;
 			},
 		);
@@ -368,7 +368,7 @@ export class Iterator<T extends defined> {
 		this.consume();
 		return new Iterator(
 			() => {
-				return this.nextItem().andThen((item) => f(state, item));
+				return this.nextItem().andWith((item) => f(state, item));
 			},
 			() => [0, this.sizeHint()[1]] as SizeHint,
 		);

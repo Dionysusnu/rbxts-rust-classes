@@ -85,17 +85,17 @@ export class OptionMut<T> extends Option<T> {
 const optionMutMeta = OptionMut as LuaMetatable<OptionType<never>>;
 optionMutMeta.__unm = (option) => option.map((item) => -(item as number)) as OptionType<never>;
 optionMutMeta.__add = (option, other) =>
-	option.andThen((item) => other.map((otherItem) => (item + otherItem) as never));
+	option.andWith((item) => other.map((otherItem) => (item + otherItem) as never));
 optionMutMeta.__sub = (option, other) =>
-	option.andThen((item) => other.map((otherItem) => (item - otherItem) as never));
+	option.andWith((item) => other.map((otherItem) => (item - otherItem) as never));
 optionMutMeta.__mul = (option, other) =>
-	option.andThen((item) => other.map((otherItem) => (item * otherItem) as never));
+	option.andWith((item) => other.map((otherItem) => (item * otherItem) as never));
 optionMutMeta.__div = (option, other) =>
-	option.andThen((item) => other.map((otherItem) => (item / otherItem) as never));
+	option.andWith((item) => other.map((otherItem) => (item / otherItem) as never));
 optionMutMeta.__mod = (option, other) =>
-	option.andThen((item) => other.map((otherItem) => (item % otherItem) as never));
+	option.andWith((item) => other.map((otherItem) => (item % otherItem) as never));
 optionMutMeta.__pow = (option, other) =>
-	option.andThen((item) => other.map((otherItem) => (item ^ otherItem) as never));
+	option.andWith((item) => other.map((otherItem) => (item ^ otherItem) as never));
 optionMutMeta.__tostring = (option) =>
 	option.match(
 		(val) => `OptionMut.some(${val})`,
