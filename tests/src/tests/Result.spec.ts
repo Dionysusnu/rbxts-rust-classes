@@ -31,6 +31,15 @@ export = () => {
 			Result.fromCallback<number>(() => error()) === Result.err<number, Option<number>>(Option.none()),
 		).to.equal(true);
 	});
+	it("Result.fromPromise test", () => {
+		print("awaiting 1");
+		print(Promise.resolve(Result.ok(1)).await());
+		print("awaiting 2");
+		print(Promise.resolve(Result.err(2)).await());
+		print("awaiting 3");
+		print(Promise.resolve(3).await());
+		expect(true).equal(true);
+	});
 	it("Result.fromPromise", () => {
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).to.equal(Result.ok(1));
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).never.to.equal(
