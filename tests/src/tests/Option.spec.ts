@@ -94,10 +94,10 @@ export = () => {
 		expect(Option.none().and(Option.none())).to.equal(Option.none());
 		expect(Option.some(1).and(Option.none())).to.equal(Option.none());
 	});
-	it("Option.andThen", () => {
-		expect(Option.some(1).andThen(() => Option.some(2))).to.equal(Option.some(2));
-		expect(Option.some(1).andThen(() => Option.none())).to.equal(Option.none());
-		expect(Option.none().andThen(() => error("Will not run"))).to.equal(Option.none());
+	it("Option.andWith", () => {
+		expect(Option.some(1).andWith(() => Option.some(2))).to.equal(Option.some(2));
+		expect(Option.some(1).andWith(() => Option.none())).to.equal(Option.none());
+		expect(Option.none().andWith(() => error("Will not run"))).to.equal(Option.none());
 	});
 	it("Option.filter", () => {
 		expect(Option.some(1).filter(() => true)).to.equal(Option.some(1));
