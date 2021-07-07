@@ -482,7 +482,7 @@ export class Iterator<T extends defined> {
 		let acc = Result.ok<B, E>(init);
 		let item = this.nextItem();
 		while (item.isSome()) {
-			acc = f(acc.unwrap(), item.unwrap());
+			acc = f(acc.asPtr() as B, item.unwrap());
 			if (acc.isErr()) {
 				break;
 			}
