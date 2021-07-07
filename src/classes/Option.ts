@@ -140,8 +140,8 @@ export class Option<T extends defined> {
 	public transpose<R, E>(this: Option<ResultType<R, E>>): ResultType<Option<R>, E> {
 		return this.isSome()
 			? this.value!.isOk()
-				? Result.ok(Option.some(this.value!.unwrap()))
-				: Result.err(this.value!.unwrapErr())
+				? Result.ok(Option.some(this.value!.asPtr() as R))
+				: Result.err(this.value!.asPtr() as E)
 			: Result.ok(Option.none());
 	}
 
