@@ -31,6 +31,18 @@ export = () => {
 			Result.fromCallback<number>(() => error()) === Result.err<number, Option<number>>(Option.none()),
 		).to.equal(true);
 	});
+	it("Result.fromPromise", () => {
+		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).to.equal(Result.ok(1));
+		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).never.to.equal(
+			Result.err<number, Option<number>>(Option.some(1)),
+		);
+		expect(Result.fromPromise<defined>(new Promise(() => error(pairs as never))).await()[1]).to.equal(
+			Result.err(Option.some(pairs)),
+		);
+		expect(Result.fromPromise<defined>(new Promise(() => error())).await()[1]).to.equal(
+			Result.err<number, Option<number>>(Option.none()),
+		);
+	});
 	it("Result.isOk", () => {
 		expect(Result.ok(1).isOk()).to.equal(true);
 		expect(Result.err(1).isOk()).to.equal(false);
