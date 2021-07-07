@@ -32,7 +32,7 @@ export = () => {
 			Result.fromCallback<number>(() => error()) === Result.err<number, Option<number>>(Option.none()),
 		).to.equal(true);
 	});
-	itFIXME("Result.fromPromise", () => {
+	it("Result.fromPromise", () => {
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).to.equal(Result.ok(1));
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).never.to.equal(
 			Result.err<number, Option<number>>(Option.some(1)),
