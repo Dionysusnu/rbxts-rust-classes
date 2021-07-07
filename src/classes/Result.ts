@@ -166,7 +166,7 @@ export class Result<T extends defined, E extends defined> {
 	}
 }
 
-const resultMeta = Result as LuaMetatable<Result<never, never>>;
+const resultMeta = Result as unknown as LuaMetatable<Result<never, never>> & { PROMISE_IGNORE: unknown };
 resultMeta.__eq = (a, b) =>
 	b.match(
 		(ok) => a.contains(ok),
@@ -177,3 +177,4 @@ resultMeta.__tostring = (result) =>
 		(ok) => `Result.ok(${ok})`,
 		(err) => `Result.err(${err})`,
 	);
+resultMeta.PROMISE_IGNORE = true;

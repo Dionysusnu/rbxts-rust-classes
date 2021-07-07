@@ -167,7 +167,7 @@ export class Option<T extends defined> {
 	}
 }
 
-const optionMeta = Option as LuaMetatable<Option<never>>;
+const optionMeta = Option as unknown as LuaMetatable<Option<never>> & { PROMISE_IGNORE: unknown };
 optionMeta.__unm = (option) => option.map((item) => -(item as number)) as Option<never>;
 optionMeta.__add = (option, other) => option.andThen((item) => other.map((otherItem) => (item + otherItem) as never));
 optionMeta.__sub = (option, other) => option.andThen((item) => other.map((otherItem) => (item - otherItem) as never));
@@ -182,3 +182,4 @@ optionMeta.__tostring = (option) =>
 	);
 optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
 optionMeta.__len = (option) => option.map((item) => (item as Array<never>).size()).unwrapOr(0);
+optionMeta.PROMISE_IGNORE = true;
