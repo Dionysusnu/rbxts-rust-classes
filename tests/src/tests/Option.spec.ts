@@ -69,7 +69,7 @@ export = () => {
 	it("Option.mapOrElse", () => {
 		expect(
 			Option.some(1).mapOrElse(
-				() => error("Will not run"),
+				() => error("Should not run"),
 				(i) => ++i,
 			),
 		).to.equal(2);
@@ -85,7 +85,7 @@ export = () => {
 		expect(Option.none<number>().okOr(2)).to.equal(Result.err(2));
 	});
 	it("Option.okOrElse", () => {
-		expect(Option.some(1).okOrElse(() => error("Will not run"))).to.equal(Result.ok(1));
+		expect(Option.some(1).okOrElse(() => error("Should not run"))).to.equal(Result.ok(1));
 		expect(Option.none<number>().okOrElse(() => 2)).to.equal(Result.err(2));
 	});
 	it("Option.and", () => {
@@ -97,7 +97,7 @@ export = () => {
 	it("Option.andWith", () => {
 		expect(Option.some(1).andWith(() => Option.some(2))).to.equal(Option.some(2));
 		expect(Option.some(1).andWith(() => Option.none())).to.equal(Option.none());
-		expect(Option.none().andWith(() => error("Will not run"))).to.equal(Option.none());
+		expect(Option.none().andWith(() => error("Should not run"))).to.equal(Option.none());
 	});
 	it("Option.filter", () => {
 		expect(Option.some(1).filter(() => true)).to.equal(Option.some(1));
@@ -112,7 +112,7 @@ export = () => {
 		expect(Option.some(1).or(Option.none())).to.equal(Option.some(1));
 	});
 	it("Option.orElse", () => {
-		expect(Option.some(1).orElse(() => error("Will not run"))).to.equal(Option.some(1));
+		expect(Option.some(1).orElse(() => error("Should not run"))).to.equal(Option.some(1));
 		expect(Option.none().orElse(() => Option.some(2))).to.equal(Option.some(2));
 		expect(Option.none().orElse(() => Option.none())).to.equal(Option.none());
 	});
@@ -140,9 +140,9 @@ export = () => {
 				.zipWith(Option.some("string"), (a, b) => [b, a] as const)
 				.unwrap()[1],
 		).to.equal(1);
-		expect(Option.none().zipWith(Option.some("string"), () => error("Will not run"))).to.equal(Option.none());
-		expect(Option.none().zipWith(Option.none(), () => error("Will not run"))).to.equal(Option.none());
-		expect(Option.some(1).zipWith(Option.none(), () => error("Will not run"))).to.equal(Option.none());
+		expect(Option.none().zipWith(Option.some("string"), () => error("Should not run"))).to.equal(Option.none());
+		expect(Option.none().zipWith(Option.none(), () => error("Should not run"))).to.equal(Option.none());
+		expect(Option.some(1).zipWith(Option.none(), () => error("Should not run"))).to.equal(Option.none());
 	});
 	it("Option.copied", () => {
 		expect(Option.some(1)).to.equal(Option.some(1));
@@ -162,12 +162,12 @@ export = () => {
 		expect(
 			Option.some(1).match(
 				() => 2,
-				() => error("Will not run"),
+				() => error("Should not run"),
 			),
 		).to.equal(2);
 		expect(
 			Option.none().match(
-				() => error("Will not run"),
+				() => error("Should not run"),
 				() => 3,
 			),
 		).to.equal(3);
