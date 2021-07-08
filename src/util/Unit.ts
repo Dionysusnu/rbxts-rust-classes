@@ -2,7 +2,7 @@
 export interface UnitType {}
 
 const unitMeta: LuaMetatable<UnitType> = {};
-unitMeta.__eq = () => false;
+unitMeta.__eq = () => true;
 unitMeta.__tostring = () => "()";
 unitMeta.__index = () => error("Attempt to index Unit", 2);
 
