@@ -43,20 +43,17 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, OptionType<defined>>> {
-		try {
-			return Result.ok(await p);
-		} catch (e) {
-			return Result.err(Option.wrap(e!));
-		}
+		return p.then(
+			(v) => Result.ok(v),
+			(e) => Result.err(Option.wrap(e)),
+		);
 	}
 
 	public static async fromVoidPromise(p: Promise<void>): Promise<Result<UnitType, OptionType<defined>>> {
-		try {
-			await p;
-			return Result.ok(unit());
-		} catch (e) {
-			return Result.err(Option.wrap(e!));
-		}
+		return p.then(
+			() => Result.ok(unit()),
+			(e) => Result.err(Option.wrap(e)),
+		);
 	}
 
 	public isOk(): boolean {
