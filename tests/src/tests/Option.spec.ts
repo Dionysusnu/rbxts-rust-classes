@@ -3,7 +3,7 @@
 import { Option, Result } from "@rbxts/rust-classes";
 
 export = () => {
-	it("Option.===", () => {
+	it("Option.__eq", () => {
 		expect(Option.some(1)).to.equal(Option.some(1));
 		expect(Option.none()).never.to.equal(Option.some(1));
 		expect(Option.some(1)).never.to.equal(Option.none());

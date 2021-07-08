@@ -4,7 +4,7 @@ declare function itFIXME(phrase: string, callback: () => void): void;
 import { Option, Result, unit } from "@rbxts/rust-classes";
 
 export = () => {
-	it("Result.===", () => {
+	it("Result.__eq", () => {
 		expect(Result.ok(1)).to.equal(Result.ok(1));
 		expect(Result.err(1)).to.equal(Result.err(1));
 		expect(Result.ok(Option.some(1))).to.equal(Result.ok(Option.some(1)));
