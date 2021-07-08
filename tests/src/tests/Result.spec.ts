@@ -134,4 +134,60 @@ export = () => {
 		expect(Result.err(1).orElse(() => Result.err(2))).to.equal(Result.err(2));
 		expect(Result.ok(1).orElse(() => error("Should not run"))).to.equal(Result.ok(1));
 	});
+	it("Result.expect", () => {
+		expect(Result.ok(1).expect("Not throw")).to.equal(1);
+		expect(() => Result.err(1).expect("Throw")).to.throw();
+		expect(Result.ok(1).expect(undefined)).to.equal(1);
+		expect(() => Result.err(1).expect(undefined)).to.throw();
+	});
+	it("Result.unwrap", () => {
+		expect(Result.ok(1).unwrap()).to.equal(1);
+		expect(() => Result.err(1).unwrap()).to.throw();
+	});
+	it("Result.unwrapOr", () => {
+		expect(Result.ok(1).unwrapOr(0)).to.equal(1);
+		expect(Result.err(1).unwrapOr(0)).to.equal(0);
+	});
+	it("Result.unwrapOrElse", () => {
+		expect(Result.ok(1).unwrapOrElse(() => 0)).to.equal(1);
+		expect(Result.err(1).unwrapOrElse(() => 0)).to.equal(0);
+	});
+	it("Result.expectErr", () => {
+		expect(Result.err(1).expectErr("Not throw")).to.equal(1);
+		expect(() => Result.ok(1).expectErr("Throw")).to.throw();
+		expect(Result.err(1).expectErr(undefined)).to.equal(1);
+		expect(() => Result.ok(1).expectErr(undefined)).to.throw();
+	});
+	it("Result.unwrapErr", () => {
+		expect(Result.err(1).unwrapErr()).to.equal(1);
+		expect(() => Result.ok(1).unwrapErr()).to.throw();
+	});
+	it("Result.transpose", () => {
+		expect(Result.err<Option<number>, number>(1).transpose()).to.equal(Option.some(Result.err(1)));
+		expect(Result.ok<Option<number>, number>(Option.some(1)).transpose()).to.equal(Option.some(Result.ok(1)));
+		expect(Result.ok<Option<number>, number>(Option.none()).transpose()).to.equal(Option.none());
+	});
+	it("Result.flatten", () => {
+		expect(Result.ok<Result<number, number>, number>(Result.ok(1)).flatten()).to.equal(Result.ok(1));
+		expect(Result.ok<Result<number, number>, number>(Result.err(1)).flatten()).to.equal(Result.err(1));
+		expect(Result.err<Result<number, number>, number>(1).flatten()).to.equal(Result.err(1));
+	});
+	it("Result.match", () => {
+		expect(
+			Result.ok(1).match(
+				(i) => ++i,
+				() => error("Should not run"),
+			),
+		).to.equal(2);
+		expect(
+			Result.err(2).match(
+				() => error("Should not run"),
+				(e) => ++e,
+			),
+		).to.equal(3);
+	});
+	it("Result.asPtr", () => {
+		expect(Result.ok(1).asPtr()).to.equal(1);
+		expect(Result.err(1).asPtr()).to.equal(1);
+	});
 };
