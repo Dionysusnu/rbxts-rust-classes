@@ -182,4 +182,3 @@ optionMeta.__tostring = (option) =>
 	);
 optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
 optionMeta.__len = (option) => option.map((item) => (item as Array<never>).size()).unwrapOr(0);
-optionMeta.PROMISE_IGNORE = true;

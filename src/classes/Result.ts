@@ -175,4 +175,3 @@ resultMeta.__tostring = (result) =>
 		(ok) => `Result.ok(${ok})`,
 		(err) => `Result.err(${err})`,
 	);
-resultMeta.PROMISE_IGNORE = true;
