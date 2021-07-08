@@ -64,4 +64,74 @@ export = () => {
 		expect(Result.ok(1).isOk()).to.equal(true);
 		expect(Result.err(1).isOk()).to.equal(false);
 	});
+	it("Result.isErr", () => {
+		expect(Result.ok(1).isErr()).to.equal(false);
+		expect(Result.err(1).isErr()).to.equal(true);
+	});
+	it("Result.contains", () => {
+		expect(Result.ok(1).contains(1)).to.equal(true);
+		expect(Result.err(1).contains(1)).to.equal(false);
+		expect(Result.ok(1).contains(2)).to.equal(false);
+	});
+	it("Result.containsErr", () => {
+		expect(Result.ok(1).containsErr(1)).to.equal(false);
+		expect(Result.err(1).containsErr(1)).to.equal(true);
+		expect(Result.err(1).containsErr(2)).to.equal(false);
+	});
+	it("Result.okOption", () => {
+		expect(Result.ok(1).okOption()).to.equal(Option.some(1));
+		expect(Result.err(1).okOption()).to.equal(Option.none());
+	});
+	it("Result.errOption", () => {
+		expect(Result.ok(1).errOption()).to.equal(Option.none());
+		expect(Result.err(1).errOption()).to.equal(Option.some(1));
+	});
+	it("Result.map", () => {
+		expect(Result.ok(1).map((i) => ++i)).to.equal(Result.ok(2));
+		expect(Result.err<number, number>(1).map(() => error("Should not run"))).to.equal(Result.err(1));
+	});
+	it("Result.mapOr", () => {
+		expect(Result.ok(1).mapOr(3, (i) => ++i)).to.equal(2);
+		expect(Result.err<number, number>(1).mapOr(3, () => error("Should not run"))).to.equal(3);
+	});
+	it("Result.mapOrElse", () => {
+		expect(
+			Result.ok(1).mapOrElse(
+				() => error("Should not run"),
+				(i) => ++i,
+			),
+		).to.equal(2);
+		expect(
+			Result.err<number, number>(1).mapOrElse(
+				() => 3,
+				() => error("Should not run"),
+			),
+		).to.equal(3);
+	});
+	it("Result.mapErr", () => {
+		expect(Result.err(1).mapErr((i) => ++i)).to.equal(Result.err(2));
+		expect(Result.ok<number, number>(1).mapErr(() => error("Should not run"))).to.equal(Result.ok(1));
+	});
+	it("Result.and", () => {
+		expect(Result.ok(1).and(Result.ok(2))).to.equal(Result.ok(2));
+		expect(Result.err(1).and(Result.ok(2))).to.equal(Result.err(1));
+		expect(Result.err(1).and(Result.err(2))).to.equal(Result.err(1));
+		expect(Result.ok(1).and(Result.err(2))).to.equal(Result.err(2));
+	});
+	it("Result.andWith", () => {
+		expect(Result.ok(1).andWith(() => Result.ok(2))).to.equal(Result.ok(2));
+		expect(Result.ok(1).andWith(() => Result.err(2))).to.equal(Result.err(2));
+		expect(Result.err(1).andWith(() => error("Should not run"))).to.equal(Result.err(1));
+	});
+	it("Result.or", () => {
+		expect(Result.ok(1).or(Result.ok(2))).to.equal(Result.ok(1));
+		expect(Result.err(1).or(Result.ok(2))).to.equal(Result.ok(2));
+		expect(Result.err(1).or(Result.err(2))).to.equal(Result.err(2));
+		expect(Result.ok(1).or(Result.err(2))).to.equal(Result.ok(1));
+	});
+	it("Result.orElse", () => {
+		expect(Result.err(1).orElse(() => Result.ok(2))).to.equal(Result.ok(2));
+		expect(Result.err(1).orElse(() => Result.err(2))).to.equal(Result.err(2));
+		expect(Result.ok(1).orElse(() => error("Should not run"))).to.equal(Result.ok(1));
+	});
 };
