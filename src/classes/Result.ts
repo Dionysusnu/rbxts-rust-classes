@@ -1,5 +1,3 @@
-import inspect from "@rbxts/inspect";
-
 import type { Iterator as IteratorType } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Vec as VecType } from "../classes/Vec";
@@ -123,7 +121,7 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public unwrap(): T | never {
-		return this.expect("called `Result.unwrap()` on an `Err` value: " + inspect(this.errValue));
+		return this.expect(`called \`Result.unwrap()\` on an \`Err\` value: ${this.errValue}`);
 	}
 
 	public unwrapOr(def: T): T {
@@ -140,7 +138,7 @@ export class Result<T extends defined, E extends defined> {
 	}
 
 	public unwrapErr(): E | never {
-		return this.expectErr("called `Result.unwrapErr()` on an `Ok` value: " + inspect(this.okValue));
+		return this.expectErr(`called \`Result.unwrapErr()\` on an \`Ok\` value: ${this.okValue}`);
 	}
 
 	public transpose<R, E>(this: Result<OptionType<R>, E>): OptionType<Result<R, E>> {
