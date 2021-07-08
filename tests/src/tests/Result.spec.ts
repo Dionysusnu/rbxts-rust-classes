@@ -1,7 +1,7 @@
 /// <reference types="@rbxts/testez/globals" />
 declare function itFIXME(phrase: string, callback: () => void): void;
 
-import { Option, Result } from "@rbxts/rust-classes";
+import { Option, Result, unit } from "@rbxts/rust-classes";
 
 export = () => {
 	it("Result.===", () => {
@@ -28,6 +28,13 @@ export = () => {
 		expect(Result.fromCallback<defined>(() => error(helper as never))).to.equal(Result.err(Option.some(helper)));
 		expect(Result.fromCallback<defined>(() => error(pairs as never))).to.equal(Result.err(Option.some(pairs)));
 		expect(Result.fromCallback<number>(() => error())).to.equal(Result.err<number, Option<number>>(Option.none()));
+	});
+	it("Result.fromVoidCallback", () => {
+		expect(Result.fromVoidCallback(() => 1)).to.equal(Result.ok(unit()));
+		const helper = [1];
+		expect(Result.fromVoidCallback(() => error(helper as never))).to.equal(Result.err(Option.some(helper)));
+		expect(Result.fromVoidCallback(() => error(pairs as never))).to.equal(Result.err(Option.some(pairs)));
+		expect(Result.fromVoidCallback(() => error())).to.equal(Result.err<number, Option<number>>(Option.none()));
 	});
 	it("Result.fromPromise", () => {
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).to.equal(Result.ok(1));
