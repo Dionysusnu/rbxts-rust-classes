@@ -22,9 +22,6 @@
 		"type": "git",
 		"url": "git+https://github.com/Dionysusnu/rbxts-rust-classes.git"
 	},
-	"dependencies": {
-		"@rbxts/inspect": "^1.0.1"
-	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^1.1.1-types.5",
 		"@rbxts/testez": "^0.3.1-ts.6",
