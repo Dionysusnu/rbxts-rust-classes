@@ -39,12 +39,12 @@ export class Vec<T extends defined> {
 
 	public i(i: number): T {
 		const val = this.array[i];
-		if (val === undefined) throw "called `Vec.i` with an out-of-range index: " + i;
+		if (val === undefined) error("called `Vec.i` with an out-of-range index: " + i, 2);
 		return val;
 	}
 
 	public truncate(len: number): Vec<T> {
-		if (len < 0) throw "called `Vec.truncate` with an out-of-range length: " + len;
+		if (len < 0) error("called `Vec.truncate` with an out-of-range length: " + len, 2);
 		for (let i = this.length - 1; i >= len; i--) {
 			delete this.array[i];
 		}
@@ -55,18 +55,18 @@ export class Vec<T extends defined> {
 		return this.array;
 	}
 	public swapRemove(i: number): T {
-		if (i < 0 || i >= this.length) throw "called `Vec.swapRemove` with an out-of-range index: " + i;
+		if (i < 0 || i >= this.length) error("called `Vec.swapRemove` with an out-of-range index: " + i, 2);
 		this.length--;
 		return this.array.unorderedRemove(i) as T;
 	}
 	public insert(i: number, element: T): Vec<T> {
-		if (i < 0 || i > this.length) throw "called `Vec.insert` with an out-of-range index: " + i;
+		if (i < 0 || i > this.length) error("called `Vec.insert` with an out-of-range index: " + i, 2);
 		this.length++;
 		this.array.insert(i, element);
 		return this;
 	}
 	public remove(i: number): T {
-		if (i < 0 || i >= this.length) throw "called `Vec.remove` with an out-of-range index: " + i;
+		if (i < 0 || i >= this.length) error("called `Vec.remove` with an out-of-range index: " + i, 2);
 		this.length--;
 		return this.array.remove(i) as T;
 	}
@@ -128,7 +128,7 @@ export class Vec<T extends defined> {
 	public *drain(r: Range): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw `called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
+			error(`called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
 		}
 		const array: Array<T> = [];
 		for (let i = range[0]; i < range[1]; i++) {
@@ -140,7 +140,7 @@ export class Vec<T extends defined> {
 	public *drainFilter(r: Range, filter: (element: T) => boolean): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw `called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
+			error(`called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
 		}
 		const array: Array<T> = [];
 		let skipped = 0;
@@ -163,7 +163,7 @@ export class Vec<T extends defined> {
 		return this.length === 0;
 	}
 	public splitOff(from: number): Vec<T> {
-		if (from < 0 || from >= this.length) throw "called `Vec.splitOff` with an out-of-range index: " + from;
+		if (from < 0 || from >= this.length) error("called `Vec.splitOff` with an out-of-range index: " + from, 2);
 		let other: Vec<T>;
 		if (from === 0) {
 			other = new Vec([...this.array]);
@@ -200,7 +200,7 @@ export class Vec<T extends defined> {
 	public *splice(r: Range, iter: Generator<T>): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw `called \`Vec.splice\` with an invalid \`Range\`: ${r[0]}..${r[1]}`;
+			error(`called \`Vec.splice\` with an invalid \`Range\`: ${r[0]}..${r[1]}`, 2);
 		}
 		let i = range[0];
 		for (const item of iter) {
@@ -224,8 +224,8 @@ export class Vec<T extends defined> {
 		return Option.wrap(this.array[i]);
 	}
 	public swap(a: number, b: number): Vec<T> {
-		if (a < 0 || a >= this.length) throw "called `Vec.swap` with an out-of-range a: " + a;
-		if (b < 0 || b >= this.length) throw "called `Vec.swap` with an out-of-range b: " + b;
+		if (a < 0 || a >= this.length) error("called `Vec.swap` with an out-of-range a: " + a, 2);
+		if (b < 0 || b >= this.length) error("called `Vec.swap` with an out-of-range b: " + b, 2);
 		const temp = this.array[a];
 		this.array[a] = this.array[b];
 		this.array[b] = temp;
