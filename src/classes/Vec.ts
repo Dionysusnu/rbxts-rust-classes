@@ -37,14 +37,14 @@ export class Vec<T extends defined> {
 		return new Vec(array);
 	}
 
-	public i(i: number, failMessage?: unknown): T {
+	public i(i: number): T {
 		const val = this.array[i];
-		if (val === undefined) throw failMessage ?? "called `Vec.i` with an out-of-range index: " + i;
+		if (val === undefined) throw "called `Vec.i` with an out-of-range index: " + i;
 		return val;
 	}
 
-	public truncate(len: number, failMessage?: unknown): Vec<T> {
-		if (len < 0) throw failMessage ?? "called `Vec.truncate` with an out-of-range length: " + len;
+	public truncate(len: number): Vec<T> {
+		if (len < 0) throw "called `Vec.truncate` with an out-of-range length: " + len;
 		for (let i = this.length - 1; i >= len; i--) {
 			delete this.array[i];
 		}
@@ -54,19 +54,19 @@ export class Vec<T extends defined> {
 	public asPtr(): Array<T> {
 		return this.array;
 	}
-	public swapRemove(i: number, failMessage?: unknown): T {
-		if (i < 0 || i >= this.length) throw failMessage ?? "called `Vec.swapRemove` with an out-of-range index: " + i;
+	public swapRemove(i: number): T {
+		if (i < 0 || i >= this.length) throw "called `Vec.swapRemove` with an out-of-range index: " + i;
 		this.length--;
 		return this.array.unorderedRemove(i) as T;
 	}
-	public insert(i: number, element: T, failMessage?: unknown): Vec<T> {
-		if (i < 0 || i > this.length) throw failMessage ?? "called `Vec.insert` with an out-of-range index: " + i;
+	public insert(i: number, element: T): Vec<T> {
+		if (i < 0 || i > this.length) throw "called `Vec.insert` with an out-of-range index: " + i;
 		this.length++;
 		this.array.insert(i, element);
 		return this;
 	}
-	public remove(i: number, failMessage?: unknown): T {
-		if (i < 0 || i >= this.length) throw failMessage ?? "called `Vec.remove` with an out-of-range index: " + i;
+	public remove(i: number): T {
+		if (i < 0 || i >= this.length) throw "called `Vec.remove` with an out-of-range index: " + i;
 		this.length--;
 		return this.array.remove(i) as T;
 	}
@@ -81,10 +81,7 @@ export class Vec<T extends defined> {
 			}
 		}
 		if (deleted > 0) {
-			this.truncate(
-				length - deleted,
-				`@rbxts/rust-classes internal error. Please submit a bug report! len=${length} del=${deleted}`,
-			);
+			this.truncate(length - deleted);
 		}
 		return this;
 	}
@@ -97,19 +94,12 @@ export class Vec<T extends defined> {
 			let nextWrite = 1;
 			while (nextRead < this.length) {
 				if (!isDup(this.array[nextRead], this.array[nextWrite - 1])) {
-					this.swap(
-						nextRead,
-						nextWrite,
-						`@rbxts/rust-classes internal error. Please submit a bug report! r=${nextRead} w=${nextWrite} a`,
-					);
+					this.swap(nextRead, nextWrite);
 					nextWrite++;
 				}
 				nextRead++;
 			}
-			this.truncate(
-				nextWrite,
-				`@rbxts/rust-classes internal error. Please submit a bug report! r=${nextRead} w=${nextWrite}`,
-			);
+			this.truncate(nextWrite);
 		}
 		return this;
 	}
@@ -135,10 +125,10 @@ export class Vec<T extends defined> {
 		other.clear();
 		return this;
 	}
-	public *drain(r: Range, failMessage?: unknown): Generator<T> {
+	public *drain(r: Range): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw failMessage ?? `called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
+			throw `called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
 		}
 		const array: Array<T> = [];
 		for (let i = range[0]; i < range[1]; i++) {
@@ -147,10 +137,10 @@ export class Vec<T extends defined> {
 		let i = 0;
 		while (i < array.size()) yield array[i++];
 	}
-	public *drainFilter(r: Range, filter: (element: T) => boolean, failMessage?: unknown): Generator<T> {
+	public *drainFilter(r: Range, filter: (element: T) => boolean): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw failMessage ?? `called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
+			throw `called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`;
 		}
 		const array: Array<T> = [];
 		let skipped = 0;
@@ -172,9 +162,8 @@ export class Vec<T extends defined> {
 	public isEmpty(): boolean {
 		return this.length === 0;
 	}
-	public splitOff(from: number, failMessage?: unknown): Vec<T> {
-		if (from < 0 || from >= this.length)
-			throw failMessage ?? "called `Vec.splitOff` with an out-of-range index: " + from;
+	public splitOff(from: number): Vec<T> {
+		if (from < 0 || from >= this.length) throw "called `Vec.splitOff` with an out-of-range index: " + from;
 		let other: Vec<T>;
 		if (from === 0) {
 			other = new Vec([...this.array]);
@@ -208,10 +197,10 @@ export class Vec<T extends defined> {
 		}
 		return this;
 	}
-	public *splice(r: Range, iter: Generator<T>, failMessage?: unknown): Generator<T> {
+	public *splice(r: Range, iter: Generator<T>): Generator<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			throw failMessage ?? `called \`Vec.splice\` with an invalid \`Range\`: ${r[0]}..${r[1]}`;
+			throw `called \`Vec.splice\` with an invalid \`Range\`: ${r[0]}..${r[1]}`;
 		}
 		let i = range[0];
 		for (const item of iter) {
@@ -234,9 +223,9 @@ export class Vec<T extends defined> {
 	public get(i: number): OptionType<T> {
 		return Option.wrap(this.array[i]);
 	}
-	public swap(a: number, b: number, failMessage?: unknown): Vec<T> {
-		if (a < 0 || a >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range a: " + a;
-		if (b < 0 || b >= this.length) throw failMessage ?? "called `Vec.swap` with an out-of-range b: " + b;
+	public swap(a: number, b: number): Vec<T> {
+		if (a < 0 || a >= this.length) throw "called `Vec.swap` with an out-of-range a: " + a;
+		if (b < 0 || b >= this.length) throw "called `Vec.swap` with an out-of-range b: " + b;
 		const temp = this.array[a];
 		this.array[a] = this.array[b];
 		this.array[b] = temp;
@@ -245,11 +234,7 @@ export class Vec<T extends defined> {
 	public reverse(): Vec<T> {
 		const tries = this.length - 1;
 		for (let i = 0; i < tries / 2; i++) {
-			this.swap(
-				i,
-				tries - i,
-				`@rbxts/rust-classes internal error. Please submit a bug report! tries=${tries} i=${i}`,
-			);
+			this.swap(i, tries - i);
 		}
 		return this;
 	}
