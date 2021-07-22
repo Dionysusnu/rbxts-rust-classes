@@ -1,5 +1,4 @@
 /// <reference types="@rbxts/testez/globals" />
-declare function itFIXME(phrase: string, callback: () => void): void;
 
 import { Option, Result, unit } from "@rbxts/rust-classes";
 
