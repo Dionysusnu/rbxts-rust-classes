@@ -54,6 +54,9 @@ export class Vec<T extends defined> {
 	public asPtr(): Array<T> {
 		return this.array;
 	}
+	public setLen(len: number): void {
+		this.length = len;
+	}
 	public swapRemove(i: number): T {
 		if (i < 0 || i >= this.length) error("called `Vec.swapRemove` with an out-of-range index: " + i, 2);
 		this.length--;
