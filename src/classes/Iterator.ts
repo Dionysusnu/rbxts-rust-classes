@@ -26,14 +26,14 @@ const DEFAULT_SIZE_HINT = () => [0, Option.none()] as SizeHint;
 
 export class Iterator<T extends defined> {
 	private consumed = false;
-	public sizeHint: () => LuaTuple<[number, OptionType<number>]>;
+	public sizeHint: () => SizeHint;
 	private constructor(public nextItem: () => OptionType<T>, sizeHint: (() => SizeHint) | undefined) {
 		this.sizeHint = sizeHint ?? DEFAULT_SIZE_HINT;
 	}
 
 	public static fromRawParts<T extends defined>(
 		nextItem: () => OptionType<T>,
-		sizeHint: () => LuaTuple<[number, OptionType<number>]> = () => [0, Option.none()] as SizeHint,
+		sizeHint?: () => SizeHint,
 	): Iterator<T> {
 		return new Iterator(nextItem, sizeHint);
 	}
@@ -43,7 +43,7 @@ export class Iterator<T extends defined> {
 		let i = 0;
 		return new Iterator(
 			() => Option.wrap(items[i++]),
-			() => [size, Option.some(size)] as LuaTuple<[number, OptionType<number>]>,
+			() => [size, Option.some(size)] as SizeHint,
 		);
 	}
 
@@ -568,7 +568,7 @@ export class Iterator<T extends defined> {
 			if (result.contains(true)) {
 				return Result.ok(item);
 			} else if (result.isErr()) {
-				// Result always err variant which are both R
+				// Result err variants are both R
 				return result as never;
 			}
 			item = this.nextItem();

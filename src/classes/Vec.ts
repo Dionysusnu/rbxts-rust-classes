@@ -1,4 +1,4 @@
-import type { Iterator as IteratorType } from "../classes/Iterator";
+import type { Iterator as IteratorType, SizeHint } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 
@@ -259,7 +259,7 @@ export class Vec<T extends defined> {
 				});
 			},
 			() => {
-				return [this.len(), Option.some(this.len())] as LuaTuple<[number, OptionType<number>]>;
+				return [this.len(), Option.some(this.len())] as SizeHint;
 			},
 		);
 	}

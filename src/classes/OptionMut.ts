@@ -1,4 +1,4 @@
-import type { Iterator as IteratorType } from "../classes/Iterator";
+import type { Iterator as IteratorType, SizeHint } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 import type { Vec as VecType } from "../classes/Vec";
@@ -77,7 +77,7 @@ export class OptionMut<T> extends Option<T> {
 	public iter(): IteratorType<T> {
 		return Iterator.fromRawParts(
 			() => this.take(),
-			() => (this.isSome() ? [1, Option.some(1)] : [0, Option.some(0)]) as LuaTuple<[number, OptionType<number>]>,
+			() => (this.isSome() ? [1, Option.some(1)] : [0, Option.some(0)]) as SizeHint,
 		);
 	}
 }
