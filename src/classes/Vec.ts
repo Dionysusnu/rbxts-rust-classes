@@ -130,31 +130,37 @@ export class Vec<T extends defined> {
 		other.clear();
 		return this;
 	}
-	public *drain(r: Range): Generator<T> {
+	public drain(...r: Range): IteratorType<T> {
 		const range = resolveRange(r, this.length);
-		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
+		if (range[0] < 0 || range[0] > range[1] || range[1] > this.length) {
 			error(`called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
 		}
-		const array: Array<T> = [];
-		for (let i = range[0]; i < range[1]; i++) {
-			array.push(this.remove(range[0]));
-		}
-		let i = 0;
-		while (i < array.size()) yield array[i++];
+		const size = range[1] - range[0];
+		let i = range[0];
+		return Iterator.fromRawParts(
+			() => (i < range[1] ? this.get(i++) : Option.none()),
+			() => [size, Option.some(size)] as SizeHint,
+		);
 	}
-	public *drainFilter(r: Range, filter: (element: T) => boolean): Generator<T> {
+	public drainFilter(r: Range, filter: (element: T) => boolean): IteratorType<T> {
 		const range = resolveRange(r, this.length);
-		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
-			error(`called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
+		if (range[0] < 0 || range[0] > range[1] || range[1] > this.length) {
+			error(`called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
 		}
-		const array: Array<T> = [];
-		let skipped = 0;
-		for (let i = range[0]; i < range[1]; i++) {
-			if (filter(this.i(range[0] + skipped))) array.push(this.remove(range[0] + skipped));
-			else skipped++;
-		}
-		let i = 0;
-		while (i < array.size()) yield array[i++];
+		const size = range[1] - range[0];
+		let i = range[0];
+		return Iterator.fromRawParts(
+			() => {
+				while (i < range[1]) {
+					const element = this.get(i++);
+					if (element.map(filter).contains(true)) {
+						return element;
+					}
+				}
+				return Option.none();
+			},
+			() => [size, Option.some(size)] as SizeHint,
+		);
 	}
 	public clear(): Vec<T> {
 		this.length = 0;
