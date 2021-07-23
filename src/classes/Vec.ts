@@ -45,6 +45,7 @@ export class Vec<T extends defined> {
 
 	public truncate(len: number): Vec<T> {
 		if (len < 0) error("called `Vec.truncate` with an out-of-range length: " + len, 2);
+		if (len >= this.length) return this;
 		for (let i = this.length - 1; i >= len; i--) {
 			delete this.array[i];
 		}
