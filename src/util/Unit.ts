@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UnitType {}
+export interface UnitType {
+	readonly type: unique symbol
+}
 
 const unitMeta: LuaMetatable<UnitType> = {};
 unitMeta.__eq = () => true;
