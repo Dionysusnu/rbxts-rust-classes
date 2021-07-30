@@ -210,7 +210,7 @@ export class Vec<T extends defined> {
 	}
 	public *splice(r: Range, iter: Generator<T>): Generator<T> {
 		const range = resolveRange(r, this.length);
-		if (range[0] < 0 || range[0] >= range[1] || range[1] > this.length) {
+		if (range[0] < 0 || range[0] > range[1] || range[1] > this.length) {
 			error(`called \`Vec.splice\` with an invalid \`Range\`: ${r[0]}..${r[1]}`, 2);
 		}
 		let i = range[0];
