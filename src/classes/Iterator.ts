@@ -4,6 +4,7 @@ import type { Vec as VecType } from "../classes/Vec";
 
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
+import { fixedSizeHint, lowerSizeHint, SizeHint } from "util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
 
 let Option: typeof OptionType;
@@ -21,14 +22,11 @@ lazyGet("Vec", (c) => {
 	Vec = c;
 });
 
-export type SizeHint = LuaTuple<[number, OptionType<number>]>;
-const DEFAULT_SIZE_HINT = () => [0, Option.none()] as SizeHint;
-
 export class Iterator<T extends defined> {
 	private consumed = false;
 	public sizeHint: () => SizeHint;
 	private constructor(public nextItem: () => OptionType<T>, sizeHint: (() => SizeHint) | undefined) {
-		this.sizeHint = sizeHint ?? DEFAULT_SIZE_HINT;
+		this.sizeHint = sizeHint ?? lowerSizeHint(0);
 	}
 
 	public static fromRawParts<T extends defined>(
@@ -39,12 +37,8 @@ export class Iterator<T extends defined> {
 	}
 
 	public static fromItems<T extends defined>(...items: Array<T>): Iterator<T> {
-		const size = items.size();
 		let i = 0;
-		return new Iterator(
-			() => Option.wrap(items[i++]),
-			() => [size, Option.some(size)] as SizeHint,
-		);
+		return new Iterator(() => Option.wrap(items[i++]), fixedSizeHint(items.size()));
 	}
 
 	private consume() {

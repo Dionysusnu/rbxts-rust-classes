@@ -1,10 +1,11 @@
-import type { Iterator as IteratorType, SizeHint } from "../classes/Iterator";
+import type { Iterator as IteratorType } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 import type { Vec as VecType } from "../classes/Vec";
 
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
+import { fixedSizeHint } from "../util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
 
 let Iterator: typeof IteratorType;
@@ -75,10 +76,7 @@ export class OptionMut<T> extends Option<T> {
 	}
 
 	public iter(): IteratorType<T> {
-		return Iterator.fromRawParts(
-			() => this.take(),
-			() => (this.isSome() ? [1, Option.some(1)] : [0, Option.some(0)]) as SizeHint,
-		);
+		return Iterator.fromRawParts(() => this.take(), this.isSome() ? fixedSizeHint(1) : fixedSizeHint(0));
 	}
 }
 

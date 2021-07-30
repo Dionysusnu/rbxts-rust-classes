@@ -1,9 +1,10 @@
-import type { Iterator as IteratorType, SizeHint } from "../classes/Iterator";
+import type { Iterator as IteratorType } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
+import { fixedSizeHint, SizeHint, upperSizeHint } from "util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
 
 let Iterator: typeof IteratorType;
@@ -22,18 +23,16 @@ lazyGet("Result", (c) => {
 });
 
 export class Vec<T extends defined> {
-	private length: number;
-	private constructor(private array: Array<T>) {
-		this.length = array.size();
-	}
+	private length = this.array.size();
+	private constructor(private array: Array<T>) {}
 
-	public static withCapacity<T>(size: number): Vec<T> {
+	public static withCapacity<T extends defined>(size: number): Vec<T> {
 		return new Vec(new Array(size));
 	}
-	public static vec<T>(...values: Array<T>): Vec<T> {
+	public static vec<T extends defined>(...values: Array<T>): Vec<T> {
 		return new Vec(values);
 	}
-	public static fromPtr<T>(array: Array<T>): Vec<T> {
+	public static fromPtr<T extends defined>(array: Array<T>): Vec<T> {
 		return new Vec(array);
 	}
 
@@ -130,37 +129,32 @@ export class Vec<T extends defined> {
 		other.clear();
 		return this;
 	}
-	public drain(...r: Range): IteratorType<T> {
+	public drain(r: Range): IteratorType<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] > range[1] || range[1] > this.length) {
 			error(`called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
 		}
 		const size = range[1] - range[0];
 		let i = range[0];
-		return Iterator.fromRawParts(
-			() => (i < range[1] ? this.get(i++) : Option.none()),
-			() => [size, Option.some(size)] as SizeHint,
-		);
+		return Iterator.fromRawParts(() => (i < range[1] ? this.get(i++) : Option.none()), fixedSizeHint(size));
 	}
 	public drainFilter(r: Range, filter: (element: T) => boolean): IteratorType<T> {
 		const range = resolveRange(r, this.length);
 		if (range[0] < 0 || range[0] > range[1] || range[1] > this.length) {
-			error(`called \`Vec.drain\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
+			error(`called \`Vec.drainFilter\` with an invalid \`Range\`: [${r[0]}, ${r[1]}]`, 2);
 		}
 		const size = range[1] - range[0];
 		let i = range[0];
-		return Iterator.fromRawParts(
-			() => {
-				while (i < range[1]) {
-					const element = this.get(i++);
-					if (element.map(filter).contains(true)) {
-						return element;
-					}
+		return Iterator.fromRawParts(() => {
+			while (i < range[1]) {
+				const element = this.get(i++);
+				if (element.map(filter).contains(true)) {
+					this.remove(i - 1);
+					return element;
 				}
-				return Option.none();
-			},
-			() => [size, Option.some(size)] as SizeHint,
-		);
+			}
+			return Option.none();
+		}, upperSizeHint(size));
 	}
 	public clear(): Vec<T> {
 		this.length = 0;
@@ -257,17 +251,12 @@ export class Vec<T extends defined> {
 	}
 	public iter(): IteratorType<T> {
 		let i = 0;
-		return Iterator.fromRawParts(
-			() => {
-				return this.get(i).map((item) => {
-					i++;
-					return item;
-				});
-			},
-			() => {
-				return [this.len(), Option.some(this.len())] as SizeHint;
-			},
-		);
+		return Iterator.fromRawParts(() => {
+			return this.get(i).map((item) => {
+				i++;
+				return item;
+			});
+		}, fixedSizeHint(this.length));
 	}
 }
 
