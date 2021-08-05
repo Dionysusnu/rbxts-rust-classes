@@ -1,5 +1,8 @@
 import { lazyRegister } from "./util/lazyLoad";
 
+import { Entry, HashMap } from "./classes/HashMap";
+lazyRegister("HashMap", HashMap);
+
 import { Iterator } from "./classes/Iterator";
 lazyRegister("Iterator", Iterator);
 
@@ -17,4 +20,4 @@ lazyRegister("Vec", Vec);
 import { Range } from "./util/Range";
 import { UnitType, unit } from "./util/Unit";
 
-export { Option, OptionMut, Iterator, Result, Range, Vec, unit, UnitType };
+export { Entry, HashMap, Iterator, Option, OptionMut, Result, Range, Vec, unit, UnitType };

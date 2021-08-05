@@ -21,6 +21,8 @@
 		// "tsBuildInfoFile": "out/tsconfig.tsbuildinfo",
 		// optional, non-configurable
 		"jsx": "react",
-		"jsxFactory": "Roact.createElement"
+		"jsxFactory": "Roact.createElement",
+		// not roblox-ts specific
+		"stripInternal": true
 	}
 }

@@ -1,9 +1,11 @@
+import type { HashMap } from "classes/HashMap";
 import type { Iterator } from "../classes/Iterator";
 import type { Option } from "../classes/Option";
 import type { Result } from "../classes/Result";
 import type { Vec } from "../classes/Vec";
 
 interface ClassMap {
+	HashMap: typeof HashMap;
 	Iterator: typeof Iterator;
 	Option: typeof Option;
 	Result: typeof Result;
