@@ -36,6 +36,12 @@ export class Vec<T extends defined> {
 		return new Vec(array);
 	}
 
+	public toString(): string {
+		return `Vec[${this.iter()
+			.fold("", (acc, item) => `${acc}${item}, `)
+			.sub(0, -3)}]`;
+	}
+
 	public i(i: number): T {
 		const val = this.array[i];
 		if (val === undefined) error("called `Vec.i` with an out-of-range index: " + i, 2);
@@ -259,10 +265,3 @@ export class Vec<T extends defined> {
 		}, fixedSizeHint(this.length));
 	}
 }
-
-const vecMeta = Vec as LuaMetatable<Vec<never>>;
-vecMeta.__tostring = (vec) =>
-	`Vec[${vec
-		.iter()
-		.fold("", (acc, item) => `${acc}${item}, `)
-		.sub(0, -3)}]`;

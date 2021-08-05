@@ -56,6 +56,13 @@ export class Result<T extends defined, E extends defined> {
 		);
 	}
 
+	public toString(): string {
+		return this.match(
+			(ok) => `Result.ok(${ok})`,
+			(err) => `Result.err(${err})`,
+		);
+	}
+
 	public isOk(): boolean {
 		return this.okValue !== undefined;
 	}
@@ -166,9 +173,4 @@ resultMeta.__eq = (a, b) =>
 	b.match(
 		(ok) => a.contains(ok),
 		(err) => a.containsErr(err),
-	);
-resultMeta.__tostring = (result) =>
-	result.match(
-		(ok) => `Result.ok(${ok})`,
-		(err) => `Result.err(${err})`,
 	);

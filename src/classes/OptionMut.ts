@@ -43,6 +43,13 @@ export class OptionMut<T> extends Option<T> {
 		return new OptionMut(val);
 	}
 
+	public toString(): string {
+		return this.match(
+			(val) => `OptionMut.some(${val})`,
+			() => "OptionMut.none",
+		);
+	}
+
 	public insert(val: T): T {
 		return (this.value = val);
 	}
@@ -94,10 +101,5 @@ optionMutMeta.__mod = (option, other) =>
 	option.andWith((item) => other.map((otherItem) => (item % otherItem) as never));
 optionMutMeta.__pow = (option, other) =>
 	option.andWith((item) => other.map((otherItem) => (item ^ otherItem) as never));
-optionMutMeta.__tostring = (option) =>
-	option.match(
-		(val) => `OptionMut.some(${val})`,
-		() => "OptionMut.none",
-	);
 optionMutMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
 optionMutMeta.__len = (option) => option.map((item) => (item as Array<never>).size()).unwrapOr(0);

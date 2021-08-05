@@ -36,6 +36,13 @@ export class Option<T extends defined> {
 		return new Option(val);
 	}
 
+	public toString(): string {
+		return this.match(
+			(val) => `Option.some(${val})`,
+			() => "Option.none",
+		);
+	}
+
 	public isSome(): boolean {
 		return this.value !== undefined;
 	}
@@ -175,10 +182,6 @@ optionMeta.__mul = (option, other) => option.andWith((item) => other.map((otherI
 optionMeta.__div = (option, other) => option.andWith((item) => other.map((otherItem) => (item / otherItem) as never));
 optionMeta.__mod = (option, other) => option.andWith((item) => other.map((otherItem) => (item % otherItem) as never));
 optionMeta.__pow = (option, other) => option.andWith((item) => other.map((otherItem) => (item ^ otherItem) as never));
-optionMeta.__tostring = (option) =>
-	option.match(
-		(val) => `Option.some(${val})`,
-		() => "Option.none",
-	);
+
 optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
 optionMeta.__len = (option) => option.map((item) => (item as Array<never>).size()).unwrapOr(0);
