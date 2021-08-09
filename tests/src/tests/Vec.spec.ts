@@ -3,6 +3,9 @@
 import { Vec } from "@rbxts/rust-classes";
 
 export = () => {
+	it("Vec.__tostring", () => {
+		expect(tostring(Vec.vec(1, 2, 3, 4))).to.equal("Vec[1, 2, 3, 4]");
+	});
 	it("Vec.i", () => {
 		expect(Vec.vec(1, 2).i(0)).to.equal(1);
 		expect(Vec.vec(1, 2).i(1)).to.equal(2);

@@ -1,8 +1,13 @@
 /// <reference types="@rbxts/testez/globals" />
 
-import { Option, Result, unit } from "@rbxts/rust-classes";
+import { Option, Result, unit, Vec } from "@rbxts/rust-classes";
 
 export = () => {
+	it("Result.__tostring", () => {
+		const helper = Vec.vec(1, 2, 3, 4);
+		expect(tostring(Result.ok(helper))).to.equal("Result.ok(Vec[1, 2, 3, 4])");
+		expect(tostring(Result.err(helper))).to.equal("Result.err(Vec[1, 2, 3, 4])");
+	});
 	it("Result.__eq", () => {
 		expect(Result.ok(1)).to.equal(Result.ok(1));
 		expect(Result.err(1)).to.equal(Result.err(1));

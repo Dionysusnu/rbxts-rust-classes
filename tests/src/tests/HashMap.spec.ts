@@ -1,6 +1,6 @@
 /// <reference types="@rbxts/testez/globals" />
 
-import { HashMap, Entry } from "@rbxts/rust-classes";
+import { HashMap } from "@rbxts/rust-classes";
 
 export = () => {
 	it("HashMap.__tostring", () => {

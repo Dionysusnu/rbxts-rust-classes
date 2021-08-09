@@ -1,8 +1,12 @@
 /// <reference types="@rbxts/testez/globals" />
 
-import { Option, Result } from "@rbxts/rust-classes";
+import { Option, Result, Vec } from "@rbxts/rust-classes";
 
 export = () => {
+	it("Option.__tostring", () => {
+		expect(tostring(Option.some(Vec.vec(1, 2, 3, 4)))).to.equal("Option.some(Vec[1, 2, 3, 4])");
+		expect(tostring(Option.none())).to.equal("Option.none");
+	});
 	it("Option.__eq", () => {
 		expect(Option.some(1)).to.equal(Option.some(1));
 		expect(Option.none()).never.to.equal(Option.some(1));

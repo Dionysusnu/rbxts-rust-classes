@@ -1,8 +1,12 @@
 /// <reference types="@rbxts/testez/globals" />
 
-import { Option, OptionMut } from "@rbxts/rust-classes";
+import { Option, OptionMut, Vec } from "@rbxts/rust-classes";
 
 export = () => {
+	it("OptionMut.__tostring", () => {
+		expect(tostring(OptionMut.some(Vec.vec(1, 2, 3, 4)))).to.equal("OptionMut.some(Vec[1, 2, 3, 4])");
+		expect(tostring(OptionMut.none())).to.equal("OptionMut.none");
+	});
 	it("OptionMut.iter", () => {
 		const some = OptionMut.some(1);
 		expect(some.iter().sizeHint()[0]).to.equal(1);
