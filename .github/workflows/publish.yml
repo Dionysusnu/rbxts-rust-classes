@@ -31,6 +31,9 @@ jobs:
             - name: Install NPM dependencies
               run: npm ci
 
+            - name: Run tests
+              run: npm test
+
             - name: Publish
               continue-on-error: true
               shell: bash
