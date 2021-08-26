@@ -7,7 +7,7 @@
 		"build": "rbxtsc --verbose",
 		"eslint": "eslint src tests --max-warnings 0",
 		"test": "npm run test-types && npm run build && npm run test-link && npm run test-compile && npm run test-rojo && npm run test-run",
-		"test-types": "npm i -D @rbxts/types@latest @rbxts/compiler-types@latest && cd tests && npm i @rbxts/types@latest @rbxts/compiler-types@latest",
+		"test-types": "cd tests && npm i @rbxts/types@latest @rbxts/compiler-types@latest",
 		"test-link": "npm link && cd tests && npm link @rbxts/rust-classes",
 		"test-compile": "cd tests && rbxtsc --verbose",
 		"test-rojo": "rojo build tests -o ./tests/test.rbxlx",
