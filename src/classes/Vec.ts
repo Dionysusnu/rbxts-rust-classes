@@ -4,7 +4,7 @@ import type { Result as ResultType } from "../classes/Result";
 
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
-import { fixedSizeHint, SizeHint, upperSizeHint } from "util/sizeHint";
+import { fixedSizeHint, SizeHint, upperSizeHint } from "../util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
 
 let Iterator: typeof IteratorType;

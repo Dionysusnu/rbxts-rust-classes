@@ -4,7 +4,7 @@ import type { Vec as VecType } from "../classes/Vec";
 
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
-import { fixedSizeHint, lowerSizeHint, SizeHint } from "util/sizeHint";
+import { fixedSizeHint, lowerSizeHint, SizeHint } from "../util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
 
 let Option: typeof OptionType;

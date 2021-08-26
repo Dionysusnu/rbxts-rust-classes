@@ -1,4 +1,4 @@
-import type { HashMap } from "classes/HashMap";
+import type { HashMap } from "../classes/HashMap";
 import type { Iterator } from "../classes/Iterator";
 import type { Option } from "../classes/Option";
 import type { Result } from "../classes/Result";
