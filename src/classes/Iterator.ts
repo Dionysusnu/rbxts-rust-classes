@@ -612,9 +612,11 @@ export class Iterator<T extends defined> {
 	 * `num > 0` => a greater than b
 	 *
 	 * For example, `(a, b) => a - b` will return the largest element.
+	 *
+	 * For equal highest elements, the first encountered one is returned.
 	 */
 	public maxBy(f: (a: T, b: T) => number): OptionType<T> {
-		return this.reduce((a, b) => (f(a, b) >= 0 ? a : b));
+		return this.reduce((a, b) => (f(a, b) > 0 ? a : b));
 	}
 
 	public unzip<A, B>(this: Iterator<[A, B]>): LuaTuple<[VecType<A>, VecType<B>]> {
