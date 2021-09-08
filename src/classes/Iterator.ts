@@ -684,24 +684,25 @@ export class Iterator<T extends defined> {
 	 *
 	 * `num > 0` => a greater than b
 	 *
-	 * For example, `(a, b) => a - b` will return the largest element.
+	 * For example, `(a, b) => a - b` will result in true if the elements are in ascending order.
 	 */
 	public isSortedBy(f: (a: T, b: T) => OptionType<number>): boolean {
 		this.consume();
-		const lastOpt = this.nextItem();
-		if (lastOpt.isNone()) {
-			return true;
-		} else {
-			let last = lastOpt.unwrap();
-			return this.all((item) => {
-				const result = f(last, item);
-				if (!result.map((ord) => ord > 0).contains(false)) {
-					return false;
-				}
-				last = item;
-				return true;
-			});
-		}
+		const firstOpt = this.nextItem();
+		return firstOpt.match(
+			(first) => {
+				let lastSeen = first;
+				return this.all((item) => {
+					const result = f(lastSeen, item);
+					if (!result.map((ord) => ord > 0).contains(false)) {
+						return false;
+					}
+					lastSeen = item;
+					return true;
+				});
+			},
+			() => true,
+		);
 	}
 
 	public isSortedByKey(f: (item: T) => number): boolean {
