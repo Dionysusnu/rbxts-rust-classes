@@ -501,13 +501,13 @@ export class Iterator<T extends defined> {
 	}
 
 	public reduce(f: (acc: T, item: T) => T): OptionType<T> {
-		const first = this.nextItem();
-		return first
-			.map((item) => this.fold(item, f))
-			.orElse(() => {
+		return this.nextItem().match(
+			(item) => Option.some(this.fold(item, f)),
+			() => {
 				this.consume();
 				return Option.none();
-			});
+			},
+		);
 	}
 
 	public all(f: (item: T) => boolean): boolean {
