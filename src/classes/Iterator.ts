@@ -562,7 +562,8 @@ export class Iterator<T extends defined> {
 			if (result.contains(true)) {
 				return Result.ok(item);
 			} else if (result.isErr()) {
-				// Result err variants are both R
+				// Result<boolean, R> => Result<Option<T>, R>
+				// Is safe because Err variants are both R
 				return result as never;
 			}
 			item = this.nextItem();
