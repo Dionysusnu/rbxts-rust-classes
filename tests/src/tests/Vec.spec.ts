@@ -73,15 +73,15 @@ export = () => {
 	});
 	it("Vec.sort", () => {
 		const helper = Vec.vec(-5, 4, 1, -3, 2);
-		helper.sort()
-		expect(tostring(helper)).to.equal("Vec[-5, -3, 1, 2, 4]")
+		helper.sort();
+		expect(tostring(helper)).to.equal("Vec[-5, -3, 1, 2, 4]");
 	});
 	it("Vec.sortByKey", () => {
 		type Pattern = {
 			foo: number;
-		}
+		};
 		const helper = Vec.vec({ foo: 1 }, { foo: -5}, { foo: -2 });
-		helper.sortByKey("foo")
-		expect(tostring(helper)).to.equal("Vec[{ foo: -5 }, { foo: -2 }, { foo: 1 }]")
+		helper.sortByKey("foo");
+		expect(tostring(helper)).to.equal("Vec[{ foo: -5 }, { foo: -2 }, { foo: 1 }]");
 	});
 };
