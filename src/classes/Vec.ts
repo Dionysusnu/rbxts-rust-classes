@@ -176,7 +176,7 @@ export class Vec<T extends defined> {
 	public isEmpty(): boolean {
 		return this.length === 0;
 	}
-	public sort(this: Vec<number | string>): Vec<T> {
+	public sort(this: Vec<number | string>): Vec<string | number> {
 		table.sort(this.array);
 		return this;
 	}
