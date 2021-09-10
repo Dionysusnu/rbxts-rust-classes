@@ -176,12 +176,12 @@ export class Vec<T extends defined> {
 	public isEmpty(): boolean {
 		return this.length === 0;
 	}
-	public sort(): Vec<T> {
+	public sort(this: Vec<number | string>): Vec<T> {
 		table.sort(this.array);
 		return this;
 	}
-	public sortByKey(key: keyof T) {
-		table.sort(this.array as unknown as Array<Record<keyof T, number>>, (a, b) => b[key] > a[key]);
+	public sortByKey(this: Vec<Exclude<T, number|string>>, key: Exclude<keyof T, keyof { [K in keyof T as T[K] extends number | string ? never : K]: T[K] }>) {
+		table.sort(this.array, (a, b) => b[key] > a[key]);
 		return this;
 	}
 	public splitOff(from: number): Vec<T> {
