@@ -76,4 +76,9 @@ export = () => {
 		helper.sort();
 		expect(tostring(helper)).to.equal("Vec[-5, -3, 1, 2, 4]");
 	});
+	it("Vec.sortByKey", () => {
+		const helper = Vec.vec(-5, 4, 1, -3, 2);
+		helper.sortByKey((x) => math.abs(x));
+		expect(tostring(helper)).to.equal("Vec[1, 2, -3, 4, -5]");
+	});
 };
