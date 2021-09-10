@@ -177,11 +177,11 @@ export class Vec<T extends defined> {
 		return this.length === 0;
 	}
 	public sort(): Vec<T> {
-		table.sort(this.array);
+		this.array.sort();
 		return this;
 	}
-	public sortByKey(key: keyof T): Vec<T> {
-		(this.array as unknown as Array<Record<keyof T, number>>).sort((a, b) => b[key] > a[key]);
+	public sortByKey(func: (val: T) => T[keyof T]) {
+		this.array.sort((a, b) => func(b) > func(a));
 		return this;
 	}
 	public splitOff(from: number): Vec<T> {
