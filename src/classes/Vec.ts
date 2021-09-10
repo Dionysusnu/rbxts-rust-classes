@@ -180,7 +180,7 @@ export class Vec<T extends defined> {
 		table.sort(this.array);
 		return this;
 	}
-	public sortByKey(key: keyof T) {
+	public sortByKey(key: keyof T): Vec<T> {
 		(this.array as unknown as Array<Record<keyof T, number>>).sort((a, b) => b[key] > a[key]);
 		return this;
 	}
