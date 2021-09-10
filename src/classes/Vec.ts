@@ -177,7 +177,7 @@ export class Vec<T extends defined> {
 		table.sort(this.array);
 		return this;
 	}
-	public sortByKey(key: T) {
+	public sortByKey(key: keyof T) {
 		table.sort(this.array, (a, b) => b[key] > a[key]);
 		return this;
 	}
