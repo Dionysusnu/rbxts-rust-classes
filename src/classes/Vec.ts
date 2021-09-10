@@ -173,6 +173,14 @@ export class Vec<T extends defined> {
 	public isEmpty(): boolean {
 		return this.length === 0;
 	}
+	public sort(): Vec<T> {
+		table.sort(this.array);
+		return this;
+	}
+	public sortByKey(key: T) {
+		table.sort(this.array, (a, b) => b[key] > a[key]);
+		return this;
+	}
 	public splitOff(from: number): Vec<T> {
 		if (from < 0 || from >= this.length) error("called `Vec.splitOff` with an out-of-range index: " + from, 2);
 		let other: Vec<T>;
