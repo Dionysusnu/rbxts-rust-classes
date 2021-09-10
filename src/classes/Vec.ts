@@ -39,7 +39,7 @@ export class Vec<T extends defined> {
 
 	public toString(): string {
 		return Option.wrap(this.array).mapOr(
-			`Vec[${vec
+			`Vec[${this
 				.iter()
 				.fold("", (acc, item) => acc + recursiveToString(item) + ", ")
 				.sub(0, -3)}]`,
