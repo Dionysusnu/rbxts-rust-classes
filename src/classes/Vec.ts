@@ -177,8 +177,8 @@ export class Vec<T extends defined> {
 		this.array.sort();
 		return this;
 	}
-	public sortByKey(func: (val: T) => T[keyof T]) {
-		this.array.sort((a, b) => func(b) > func(a));
+	public sortByKey(func: (val: T) => T[keyof T]): Vec<T> {
+		(this.array as unknown as Array<number>).sort((a, b) => func(b) > func(a));
 		return this;
 	}
 	public splitOff(from: number): Vec<T> {
