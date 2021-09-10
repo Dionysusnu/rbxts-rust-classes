@@ -37,9 +37,13 @@ export class Vec<T extends defined> {
 	}
 
 	public toString(): string {
-		return `Vec[${this.iter()
-			.fold("", (acc, item) => `${acc}${item}, `)
-			.sub(0, -3)}]`;
+		return Option.wrap(this.array).mapOr(
+			`Vec[${vec
+				.iter()
+				.fold("", (acc, item) => acc + recursiveToString(item) + ", ")
+				.sub(0, -3)}]`,
+			() => "Vec is Empty!",
+		);
 	}
 
 	public i(i: number): T {

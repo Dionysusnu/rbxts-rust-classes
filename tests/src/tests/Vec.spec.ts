@@ -81,6 +81,6 @@ export = () => {
 			foo: number;
 		}
 		const helper = Vec.vec({ foo: 1 }, { foo: -5}, { foo: -2 })
-		expect(tostring(helper)).to.equal("Vec[{foo: -5}, {foo: -2}, {foo: 1}]")
+		expect(tostring(helper)).to.equal("Vec[{ foo: -5 }, { foo: -2 }, { foo: 1 }]")
 	});
 };
