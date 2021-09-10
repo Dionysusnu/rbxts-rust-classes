@@ -6,7 +6,6 @@ import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
 import { fixedSizeHint, SizeHint, upperSizeHint } from "../util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
-import { recursiveToString } from "../util/recursiveToString";
 
 let Iterator: typeof IteratorType;
 lazyGet("Iterator", (c) => {
