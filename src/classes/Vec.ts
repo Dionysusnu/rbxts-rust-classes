@@ -37,13 +37,14 @@ export class Vec<T extends defined> {
 		return new Vec(array);
 	}
 
-	public toString(): string {
-		return Option.wrap(this.array).mapOr(
-			`Vec[${this
-				.iter()
-				.fold("", (acc, item) => acc + recursiveToString(item) + ", ")
-				.sub(0, -3)}]`,
-			() => "Vec is Empty!",
+	public toString(vec): string {
+		return Option.wrap(next(["string"])).mapOr(
+			"Vec is Empty!",
+			() =>
+				`Vec[${vec
+					.iter()
+					.fold("", (acc, item) => acc + recursiveToString(item) + ", ")
+					.sub(0, -3)}]`,
 		);
 	}
 
