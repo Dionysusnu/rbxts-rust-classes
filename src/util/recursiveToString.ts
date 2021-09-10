@@ -1,4 +1,4 @@
-export function recursiveToString(t: unknown, indent = "") {
+export function recursiveToString(t: unknown, indent = ""): string {
 	if (typeIs(t, "table")) {
 		let buffer = "";
 		buffer += "{";
