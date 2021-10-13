@@ -214,14 +214,14 @@ export class Iterator<T extends defined> {
 		}
 	}
 
-	public filter(f: (item: T) => boolean): Iterator<T> {
+	public filter<S extends T>(f: (item: T) => item is S): Iterator<S> {
 		this.consume();
 		return new Iterator(
 			() => {
 				while (true) {
 					const item = this.nextItem();
 					if (item.isNone() || item.map(f).contains(true)) {
-						return item;
+						return item as OptionType<S>;
 					}
 				}
 			},
