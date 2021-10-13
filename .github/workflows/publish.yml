@@ -4,9 +4,8 @@ name: Publish
 
 on:
     workflow_dispatch:
-    push:
-        branches:
-            - master
+    schedule:
+        - cron: "0 7 * * *"
 
 jobs:
     publish:
