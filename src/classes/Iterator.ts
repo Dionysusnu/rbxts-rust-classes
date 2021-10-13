@@ -236,7 +236,7 @@ export class Iterator<T extends defined> {
 				while (true) {
 					const item = this.nextItem();
 					const mapped = item.andWith(f);
-					if (mapped.isSome()) {
+					if (item.isNone() || mapped.isSome()) {
 						return mapped;
 					}
 				}
