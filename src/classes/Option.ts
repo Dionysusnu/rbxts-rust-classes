@@ -197,7 +197,3 @@ optionMeta.__pow = (option, other) => option.andWith((item) => other.map((otherI
 
 optionMeta.__eq = (a, b) => a.asPtr() === b.asPtr();
 optionMeta.__len = (option) => option.map((item) => (item as Array<never>).size()).unwrapOr(0);
-
-Option.some(1)
-	.zipWith((a, b, c) => a + b + c, Option.some(2), Option.some(3))
-	.unwrap();
