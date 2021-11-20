@@ -22,13 +22,9 @@ lazyGet("Vec", (c) => {
 });
 
 type UnzipOption<O extends Option<defined>> = O extends Option<infer V> ? V : never;
-type UnzipOptionArray<T extends Array<unknown>> = T extends []
-	? T
-	: T extends [infer First, ...infer Rest]
-	? First extends Option<defined>
-		? [UnzipOption<First>, ...UnzipOptionArray<Rest>]
-		: never
-	: never;
+type UnzipOptionArray<T extends Array<unknown>> = {
+	[K in keyof T]: T[K] extends Option<defined> ? UnzipOption<T[K]> : never;
+};
 
 export class Option<T extends defined> {
 	protected constructor(protected readonly value: T | undefined) {}
