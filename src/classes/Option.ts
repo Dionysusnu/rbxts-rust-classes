@@ -128,7 +128,7 @@ export class Option<T extends defined> {
 	}
 
 	public zip<O extends Array<Option<defined>>>(...others: O): Option<[T, ...UnzipOptionArray<O>]> {
-		if (this.isSome() && others.forEach((o) => o.isSome())) {
+		if (this.isSome() && others.every((o) => o.isSome())) {
 			return Option.some([this.value as T, ...(others.map((o) => o.value!) as UnzipOptionArray<O>)]);
 		}
 		return Option.none();
@@ -138,7 +138,7 @@ export class Option<T extends defined> {
 		func: (self: T, ...other: UnzipOptionArray<O>) => R,
 		...others: O
 	): Option<R> {
-		if (this.isSome() && others.forEach((o) => o.isSome())) {
+		if (this.isSome() && others.every((o) => o.isSome())) {
 			return Option.some(func(this.value as T, ...(others.map((o) => o.value!) as UnzipOptionArray<O>)));
 		}
 		return Option.none();
