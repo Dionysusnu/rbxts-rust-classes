@@ -8,4 +8,4 @@ Currently includes:
 -   [Result\<T, E>](https://doc.rust-lang.org/std/result/enum.Result.html)
 -   [Vec\<T>](https://doc.rust-lang.org/std/vec/struct.Vec.html)
 -   [Iterator\<T>](https://doc.rust-lang.org/std/iter/trait.Iterator.html)
--   [HashMap\<K, V>](https://doc.rust-lang.org/std/collections/struct.HashMap.html)
+-   [HashMap\<K, V>](https://doc.rust-lang.org/std/collections/struct.HashMap.html) (WIP)
