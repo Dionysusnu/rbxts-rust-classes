@@ -77,7 +77,7 @@ export class Option<T extends defined> {
 		return this.isSome() ? (this.value as T) : gen();
 	}
 
-	public map<U>(func: (item: T) => U): Option<U> {
+	public map<U extends defined>(func: (item: T) => U): Option<U> {
 		return this.isSome() ? Option.some(func(this.value as T)) : Option.none();
 	}
 
@@ -89,11 +89,11 @@ export class Option<T extends defined> {
 		return this.isSome() ? func(this.value as T) : def();
 	}
 
-	public okOr<E>(err: E): ResultType<T, E> {
+	public okOr<E extends defined>(err: E): ResultType<T, E> {
 		return this.isSome() ? Result.ok(this.value as T) : Result.err(err);
 	}
 
-	public okOrElse<E>(err: () => E): ResultType<T, E> {
+	public okOrElse<E extends defined>(err: () => E): ResultType<T, E> {
 		return this.isSome() ? Result.ok(this.value as T) : Result.err(err());
 	}
 
