@@ -57,8 +57,13 @@ export class Entry<K extends defined, V extends defined> {
 	public key(): K {
 		return this.index;
 	}
+	/**
+	 * Only works correctly if the value is a reference.
+	 * Use `[number]` as your value if you want a primitive type as value.
+	 */
 	public andModify(f: (value: V) => void): Entry<K, V> {
-		this.map.get(this.index).map(f);
+		const val = this.map.get(this.index);
+		if (val.isSome()) f(val.unwrap());
 		return this;
 	}
 	public insert(value: V): Entry<K, V> {
