@@ -210,7 +210,7 @@ export class Iterator<T extends defined> {
 		while (true) {
 			result = this.nextItem();
 			if (result.isNone()) break;
-			result.map(f);
+			f(result.unwrap());
 		}
 	}
 
@@ -433,7 +433,7 @@ export class Iterator<T extends defined> {
 		return new Iterator(
 			() => {
 				const item = this.nextItem();
-				item.map(f);
+				if (item.isSome()) f(item.unwrap());
 				return item;
 			},
 			() => this.sizeHint(),
