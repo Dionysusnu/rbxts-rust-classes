@@ -174,6 +174,7 @@ export class HashMap<K extends defined, V extends defined> {
 	}
 	public insert(key: K, value: V): OptionType<V> {
 		const old = this.map.get(key);
+		if (old === undefined) this.length++;
 		this.map.set(key, value);
 		return Option.wrap(old);
 	}
@@ -182,23 +183,26 @@ export class HashMap<K extends defined, V extends defined> {
 		if (old) {
 			return Result.err({ entry: Entry.construct(this, key), value });
 		}
+		this.length++;
 		this.map.set(key, value);
 		return Result.ok(value);
 	}
 	public remove(key: K): OptionType<V> {
 		const old = this.map.get(key);
+		if (old !== undefined) this.length--;
 		this.map.delete(key);
 		return Option.wrap(old);
 	}
 	public removeEntry(key: K): OptionType<[K, V]> {
 		const old = this.map.get(key);
+		if (old !== undefined) this.length--;
 		this.map.delete(key);
 		return Option.some(key).zip(Option.wrap(old));
 	}
 	public retain(filter: (key: K, value: V) => boolean): HashMap<K, V> {
-		this.map.forEach((v, k) => {
+		this.iter().forEach(([k, v]) => {
 			if (!filter(k, v)) {
-				this.map.delete(k);
+				this.remove(k);
 			}
 		});
 		return this;
