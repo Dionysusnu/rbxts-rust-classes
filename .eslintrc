@@ -7,7 +7,7 @@
 		"sourceType": "module",
 		"project": ["tsconfig.json", "tests/tsconfig.json"]
 	},
-	"plugins": ["roblox-ts", "@typescript-eslint", "@typescript-eslint/eslint-plugin", "prettier"],
+	"plugins": ["@typescript-eslint", "@typescript-eslint/eslint-plugin", "prettier"],
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
