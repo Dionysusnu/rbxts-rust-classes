@@ -171,7 +171,7 @@ export class Vec<T extends defined> {
 		return this.length;
 	}
 	public isEmpty(): boolean {
-		return this.length === 0;
+		return next(this.array)[0] === undefined;
 	}
 	public splitOff(from: number): Vec<T> {
 		if (from < 0 || from >= this.length) error("called `Vec.splitOff` with an out-of-range index: " + from, 2);

@@ -131,7 +131,7 @@ export class HashMap<K extends defined, V extends defined> {
 		return this.length;
 	}
 	public isEmpty(): boolean {
-		return this.length === 0;
+		return next(this.map)[0] === undefined;
 	}
 	public drain(): IteratorType<[K, V]> {
 		let last: K | undefined;
