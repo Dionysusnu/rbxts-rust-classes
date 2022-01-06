@@ -221,7 +221,7 @@ export class Vec<T extends defined> {
 			yield temp;
 		}
 		while (i < range[1]) {
-			this.array.remove(i);
+			this.remove(i);
 			range[1]--;
 		}
 	}
