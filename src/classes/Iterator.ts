@@ -48,10 +48,10 @@ export class Iterator<T extends defined> {
 
 	public count(): number {
 		this.consume();
-		let i = -1;
-		do {
+		let i = 0;
+		while (this.nextItem().isSome()) {
 			i++;
-		} while (this.nextItem().isSome());
+		}
 		return i;
 	}
 
