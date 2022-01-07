@@ -48,7 +48,7 @@ export class Iterator<T extends defined> {
 
 	public count(): number {
 		this.consume();
-		let i = 0;
+		let i = -1;
 		do {
 			i++;
 		} while (this.nextItem().isSome());
