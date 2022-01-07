@@ -49,9 +49,9 @@ export class Iterator<T extends defined> {
 	public count(): number {
 		this.consume();
 		let i = 0;
-		do {
+		while (this.nextItem().isSome()) {
 			i++;
-		} while (this.nextItem().isSome());
+		}
 		return i;
 	}
 
