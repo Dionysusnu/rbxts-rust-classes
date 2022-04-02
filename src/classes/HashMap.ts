@@ -146,7 +146,7 @@ export class HashMap<K extends defined, V extends defined> {
 	public drainFilter(filter: (key: K, value: V) => boolean): IteratorType<[K, V]> {
 		let last: K | undefined;
 		return Iterator.fromRawParts(() => {
-			while ((last = next(this.map, last)[0])) {
+			while ((last = next(this.map, last)[0]) !== undefined) {
 				const element = this.removeEntry(last);
 				if (element.map(([k, v]) => filter(k, v)).contains(true)) {
 					return element;

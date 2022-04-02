@@ -29,6 +29,7 @@
 		"@typescript-eslint/no-unused-vars": "off",
 		"@typescript-eslint/no-namespace": "off",
 		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/strict-boolean-expressions": "warn",
 		"class-methods-use-this": "warn",
 		"prefer-const": "warn",
 		"no-constant-condition": "off",
