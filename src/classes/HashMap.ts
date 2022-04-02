@@ -2,11 +2,8 @@ import type { Iterator as IteratorType } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 import type { Vec as VecType } from "../classes/Vec";
-
 import { lazyGet } from "../util/lazyLoad";
-import { Range, resolveRange } from "../util/Range";
-import { fixedSizeHint, SizeHint, upperSizeHint } from "../util/sizeHint";
-import { unit, UnitType } from "../util/Unit";
+import { fixedSizeHint, upperSizeHint } from "../util/sizeHint";
 
 let Iterator: typeof IteratorType;
 lazyGet("Iterator", (c) => {
@@ -210,7 +207,7 @@ export class HashMap<K extends defined, V extends defined> {
 	public intoKeys(): IteratorType<K> {
 		let last: K | undefined;
 		return Iterator.fromRawParts(() => {
-			const [key, value] = next(this.map, last);
+			const [key] = next(this.map, last);
 			return Option.wrap(key).map(() => {
 				last = key;
 				return key;

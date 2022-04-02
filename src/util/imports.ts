@@ -3,7 +3,6 @@ import type { Iterator as IteratorType } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 import type { Vec as VecType } from "../classes/Vec";
-
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
 import { fixedSizeHint, SizeHint } from "../util/sizeHint";

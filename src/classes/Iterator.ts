@@ -1,9 +1,7 @@
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
 import type { Vec as VecType } from "../classes/Vec";
-
 import { lazyGet } from "../util/lazyLoad";
-import { Range, resolveRange } from "../util/Range";
 import { fixedSizeHint, lowerSizeHint, SizeHint } from "../util/sizeHint";
 import { unit, UnitType } from "../util/Unit";
 

@@ -1,11 +1,9 @@
 import type { Iterator as IteratorType } from "../classes/Iterator";
 import type { Option as OptionType } from "../classes/Option";
 import type { Result as ResultType } from "../classes/Result";
-
 import { lazyGet } from "../util/lazyLoad";
 import { Range, resolveRange } from "../util/Range";
-import { fixedSizeHint, SizeHint, upperSizeHint } from "../util/sizeHint";
-import { unit, UnitType } from "../util/Unit";
+import { fixedSizeHint, upperSizeHint } from "../util/sizeHint";
 
 let Iterator: typeof IteratorType;
 lazyGet("Iterator", (c) => {
