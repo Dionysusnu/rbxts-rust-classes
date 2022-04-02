@@ -11,6 +11,7 @@
 		"target": "es6",
 		"typeRoots": ["node_modules/@rbxts"],
 		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
 		// required, configurable
 		"rootDir": "src",
 		"outDir": "out",
