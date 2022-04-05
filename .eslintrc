@@ -15,7 +15,6 @@
 		"plugin:prettier/recommended"
 	],
 	"rules": {
-		"prettier/prettier": "warn",
 		"@typescript-eslint/array-type": [
 			"warn",
 			{
@@ -31,8 +30,10 @@
 		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/strict-boolean-expressions": "warn",
 		"class-methods-use-this": "warn",
-		"prefer-const": "warn",
+		"curly": ["warn", "multi-line", "consistent"],
 		"no-constant-condition": "off",
+		"prefer-const": "warn",
+		"prettier/prettier": "warn",
 		"simple-import-sort/imports": "warn",
 		"simple-import-sort/exports": "warn"
 	}
