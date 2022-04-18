@@ -33,6 +33,10 @@ jobs:
 
             - name: Run tests
               run: npm test
+              
+            - uses: OrbitalOwen/desktop-screenshot-action@0.1
+              with:
+                file-name: 'desktop.jpg'
 
             - name: Publish
               continue-on-error: true
