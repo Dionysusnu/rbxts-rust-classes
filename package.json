@@ -14,8 +14,7 @@
 		"test-run": "run-in-roblox --place ./tests/test.rbxlx --script ./tests/out/main.server.lua",
 		"dev-add-version": "copy package.json package-temp.json & for /F \"tokens=*\" %n IN ('git rev-parse --short HEAD') DO (cat package.json | jq --tab \".version |= . + \\\"-dev-%n\\\"\" > package-new.json & move package-new.json package.json)",
 		"dev-undo-version": "move package-temp.json package.json",
-		"dev-publish": "npm test && npm run eslint && npm run dev-add-version && npm publish --tag next & npm run dev-undo-version",
-		"dev-publish-no-test": "npm run eslint && npm run dev-add-version && npm publish --tag next & npm run dev-undo-version"
+		"dev-publish": "npm run eslint && npm run dev-add-version && npm publish --tag next & npm run dev-undo-version"
 	},
 	"keywords": [
 		"Roblox"
