@@ -40,14 +40,14 @@ export class Result<T extends defined, E extends defined> {
 		return success ? Result.ok(unit()) : Result.err(Option.wrap(result!));
 	}
 
-	public static async fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, OptionType<defined>>> {
+	public static fromPromise<T extends defined>(p: Promise<T>): Promise<Result<T, OptionType<defined>>> {
 		return p.then(
 			(v) => Result.ok(v),
 			(e) => Result.err(Option.wrap(e)),
 		);
 	}
 
-	public static async fromVoidPromise(p: Promise<void>): Promise<Result<UnitType, OptionType<defined>>> {
+	public static fromVoidPromise(p: Promise<void>): Promise<Result<UnitType, OptionType<defined>>> {
 		return p.then(
 			() => Result.ok(unit()),
 			(e) => Result.err(Option.wrap(e)),
