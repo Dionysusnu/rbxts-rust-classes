@@ -1,7 +1,7 @@
 import type { HashMap } from "../classes/HashMap";
 import type { Iterator } from "../classes/Iterator";
 import type { Option } from "../classes/Option";
-import { OptionMut } from "../classes/OptionMut";
+import type { OptionMut } from "../classes/OptionMut";
 import type { Result } from "../classes/Result";
 import type { Vec } from "../classes/Vec";
 
