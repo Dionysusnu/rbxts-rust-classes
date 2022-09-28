@@ -102,7 +102,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public chain<U>(other: Iterator<U>): Iterator<T | U> {
+	public chain<U extends defined>(other: Iterator<U>): Iterator<T | U> {
 		this.consume();
 		other.consume();
 		let firstDone = false;
@@ -131,7 +131,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public zip<U>(other: Iterator<U>): Iterator<[T, U]> {
+	public zip<U extends defined>(other: Iterator<U>): Iterator<[T, U]> {
 		this.consume();
 		other.consume();
 		return new Iterator(
@@ -161,14 +161,14 @@ export class Iterator<T extends defined> {
 	/**
 	 * Note: Behaviour when original Iterator ends is different to Rust.
 	 */
-	public intersperse<U>(other: U): Iterator<T | U> {
+	public intersperse<U extends defined>(other: U): Iterator<T | U> {
 		return this.intersperseWith(() => other);
 	}
 
 	/**
 	 * Note: Behaviour when original Iterator ends is different to Rust.
 	 */
-	public intersperseWith<U>(other: () => U): Iterator<T | U> {
+	public intersperseWith<U extends defined>(other: () => U): Iterator<T | U> {
 		this.consume();
 		let doIntermediate = true;
 		return new Iterator<T | U>(
@@ -194,7 +194,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public map<B>(f: (item: T) => B): Iterator<B> {
+	public map<B extends defined>(f: (item: T) => B): Iterator<B> {
 		this.consume();
 		return new Iterator(
 			() => this.nextItem().map(f),
@@ -227,7 +227,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public filterMap<U>(f: (item: T) => OptionType<U>): Iterator<U> {
+	public filterMap<U extends defined>(f: (item: T) => OptionType<U>): Iterator<U> {
 		this.consume();
 		return new Iterator(
 			() => {
@@ -303,7 +303,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public mapWhile<B>(f: (item: T) => OptionType<B>): Iterator<B> {
+	public mapWhile<B extends defined>(f: (item: T) => OptionType<B>): Iterator<B> {
 		this.consume();
 		return new Iterator(
 			() => this.nextItem().andWith(f),
@@ -356,7 +356,10 @@ export class Iterator<T extends defined> {
 	 * Only works correctly if the state is a reference.
 	 * Use `[number]` as your state if you want a primitive type as state.
 	 */
-	public scan<St, B>(state: St, f: (state: St, item: T) => OptionType<B>): Iterator<B> {
+	public scan<St extends defined, B extends defined>(
+		state: St,
+		f: (state: St, item: T) => OptionType<B>,
+	): Iterator<B> {
 		this.consume();
 		return new Iterator(
 			() => {
@@ -366,7 +369,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public flatMap<U>(f: (item: T) => Iterator<U>): Iterator<U> {
+	public flatMap<U extends defined>(f: (item: T) => Iterator<U>): Iterator<U> {
 		this.consume();
 		let curr: Iterator<U>;
 		return new Iterator(
@@ -397,7 +400,7 @@ export class Iterator<T extends defined> {
 		);
 	}
 
-	public flatten<I>(this: Iterator<Iterator<I>>): Iterator<I> {
+	public flatten<I extends defined>(this: Iterator<Iterator<I>>): Iterator<I> {
 		return this.flatMap((i) => i);
 	}
 
@@ -470,7 +473,10 @@ export class Iterator<T extends defined> {
 		return [trueVec, falseVec] as LuaTuple<[VecType<T>, VecType<T>]>;
 	}
 
-	public tryFold<B, E>(init: B, f: (acc: B, item: T) => ResultType<B, E>): ResultType<B, E> {
+	public tryFold<B extends defined, E extends defined>(
+		init: B,
+		f: (acc: B, item: T) => ResultType<B, E>,
+	): ResultType<B, E> {
 		let acc = Result.ok<B, E>(init);
 		let item = this.nextItem();
 		while (item.isSome()) {
@@ -483,11 +489,11 @@ export class Iterator<T extends defined> {
 		return acc;
 	}
 
-	public tryForEach<E>(f: (item: T) => ResultType<UnitType, E>): ResultType<UnitType, E> {
+	public tryForEach<E extends defined>(f: (item: T) => ResultType<UnitType, E>): ResultType<UnitType, E> {
 		return this.tryFold(unit(), (_, item) => f(item));
 	}
 
-	public fold<B>(init: B, f: (acc: B, item: T) => B): B {
+	public fold<B extends defined>(init: B, f: (acc: B, item: T) => B): B {
 		this.consume();
 		let acc = init;
 		let item = this.nextItem();
@@ -541,7 +547,7 @@ export class Iterator<T extends defined> {
 		return Option.none();
 	}
 
-	public findMap<B>(f: (item: T) => OptionType<B>): OptionType<B> {
+	public findMap<B extends defined>(f: (item: T) => OptionType<B>): OptionType<B> {
 		let item = this.nextItem();
 		while (item.isSome()) {
 			const result = f(item.unwrap());
@@ -553,7 +559,7 @@ export class Iterator<T extends defined> {
 		return Option.none();
 	}
 
-	public tryFind<R>(f: (item: T) => ResultType<boolean, R>): ResultType<OptionType<T>, R> {
+	public tryFind<R extends defined>(f: (item: T) => ResultType<boolean, R>): ResultType<OptionType<T>, R> {
 		let item = this.nextItem();
 		while (item.isSome()) {
 			const result = f(item.unwrap());
@@ -617,7 +623,7 @@ export class Iterator<T extends defined> {
 		return this.reduce((a, b) => (f(a, b) > 0 ? a : b));
 	}
 
-	public unzip<A, B>(this: Iterator<[A, B]>): LuaTuple<[VecType<A>, VecType<B>]> {
+	public unzip<A extends defined, B extends defined>(this: Iterator<[A, B]>): LuaTuple<[VecType<A>, VecType<B>]> {
 		this.consume();
 		const size = this.sizeHint();
 		const leftVec = Vec.withCapacity<A>(size[1].unwrapOr(size[0]));

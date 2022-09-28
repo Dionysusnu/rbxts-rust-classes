@@ -32,7 +32,7 @@ export class Result<T extends defined, E extends defined> {
 
 	public static fromCallback<T extends defined>(c: () => T): Result<T, OptionType<defined>> {
 		const [success, result] = pcall(c);
-		return success ? Result.ok(result as T) : Result.err(Option.wrap(result));
+		return success ? Result.ok(result as T) : Result.err(Option.wrap(result as defined | undefined));
 	}
 
 	public static fromVoidCallback(c: () => void): Result<UnitType, OptionType<defined>> {
@@ -85,7 +85,7 @@ export class Result<T extends defined, E extends defined> {
 		return Option.wrap(this.errValue);
 	}
 
-	public map<U>(func: (item: T) => U): Result<U, E> {
+	public map<U extends defined>(func: (item: T) => U): Result<U, E> {
 		return this.isOk() ? Result.ok(func(this.okValue as T)) : Result.err(this.errValue as E);
 	}
 
@@ -97,23 +97,23 @@ export class Result<T extends defined, E extends defined> {
 		return this.isOk() ? func(this.okValue as T) : def(this.errValue as E);
 	}
 
-	public mapErr<F>(func: (item: E) => F): Result<T, F> {
+	public mapErr<F extends defined>(func: (item: E) => F): Result<T, F> {
 		return this.isErr() ? Result.err(func(this.errValue as E)) : Result.ok(this.okValue as T);
 	}
 
-	public and<U>(other: Result<U, E>): Result<U, E> {
+	public and<U extends defined>(other: Result<U, E>): Result<U, E> {
 		return this.isErr() ? Result.err(this.errValue as E) : other;
 	}
 
-	public andWith<U>(func: (item: T) => Result<U, E>): Result<U, E> {
+	public andWith<U extends defined>(func: (item: T) => Result<U, E>): Result<U, E> {
 		return this.isErr() ? Result.err(this.errValue as E) : func(this.okValue as T);
 	}
 
-	public or<F>(other: Result<T, F>): Result<T, F> {
+	public or<F extends defined>(other: Result<T, F>): Result<T, F> {
 		return this.isOk() ? Result.ok(this.okValue as T) : other;
 	}
 
-	public orElse<F>(other: (item: E) => Result<T, F>): Result<T, F> {
+	public orElse<F extends defined>(other: (item: E) => Result<T, F>): Result<T, F> {
 		return this.isOk() ? Result.ok(this.okValue as T) : other(this.errValue as E);
 	}
 
@@ -143,11 +143,11 @@ export class Result<T extends defined, E extends defined> {
 		return this.expectErr(`called \`Result.unwrapErr()\` on an \`Ok\` value: ${this.okValue}`);
 	}
 
-	public transpose<R, E>(this: Result<OptionType<R>, E>): OptionType<Result<R, E>> {
+	public transpose<R extends defined, E extends defined>(this: Result<OptionType<R>, E>): OptionType<Result<R, E>> {
 		return this.isOk() ? this.okValue!.map((some) => Result.ok(some)) : Option.some(Result.err(this.errValue as E));
 	}
 
-	public flatten<R, E>(this: Result<Result<R, E>, E>): Result<R, E> {
+	public flatten<R extends defined, E extends defined>(this: Result<Result<R, E>, E>): Result<R, E> {
 		return this.isOk() ? new Result(this.okValue!.okValue, this.okValue!.errValue) : Result.err(this.errValue as E);
 	}
 

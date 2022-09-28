@@ -25,7 +25,7 @@ lazyGet("Vec", (c) => {
 	Vec = c;
 });
 
-export class OptionMut<T> extends Option<T> {
+export class OptionMut<T extends defined> extends Option<T> {
 	protected value: T | undefined;
 
 	public static none<T extends defined>(): OptionMut<T> {

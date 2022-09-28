@@ -89,11 +89,11 @@ export class Option<T extends defined> {
 		return this.isSome() ? Result.ok(this.value as T) : Result.err(err());
 	}
 
-	public and<U>(other: Option<U>): Option<U> {
+	public and<U extends defined>(other: Option<U>): Option<U> {
 		return this.isNone() ? Option.none() : other;
 	}
 
-	public andWith<U>(other: (val: T) => Option<U>): Option<U> {
+	public andWith<U extends defined>(other: (val: T) => Option<U>): Option<U> {
 		return this.isSome() ? other(this.value as T) : Option.none();
 	}
 
@@ -119,14 +119,14 @@ export class Option<T extends defined> {
 			: Option.none();
 	}
 
-	public zip<U>(other: Option<U>): Option<[T, U]> {
+	public zip<U extends defined>(other: Option<U>): Option<[T, U]> {
 		if (this.isSome() && other.isSome()) {
 			return Option.some([this.value as T, other.value as U]);
 		}
 		return Option.none();
 	}
 
-	public zipWith<U, R>(other: Option<U>, func: (self: T, other: U) => R): Option<R> {
+	public zipWith<U extends defined, R extends defined>(other: Option<U>, func: (self: T, other: U) => R): Option<R> {
 		if (this.isSome() && other.isSome()) {
 			return Option.some(func(this.value as T, other.value as U));
 		}
@@ -141,7 +141,7 @@ export class Option<T extends defined> {
 		return this.map((i) => i.cloned());
 	}
 
-	public transpose<R, E>(this: Option<ResultType<R, E>>): ResultType<Option<R>, E> {
+	public transpose<R extends defined, E extends defined>(this: Option<ResultType<R, E>>): ResultType<Option<R>, E> {
 		return this.isSome()
 			? this.value!.isOk()
 				? Result.ok(Option.some(this.value!.asPtr() as R))
@@ -149,7 +149,7 @@ export class Option<T extends defined> {
 			: Result.ok(Option.none());
 	}
 
-	public flatten<I>(this: Option<Option<I>>): Option<I> {
+	public flatten<I extends defined>(this: Option<Option<I>>): Option<I> {
 		return this.isSome() ? Option.wrap(this.value!.value) : Option.none();
 	}
 
