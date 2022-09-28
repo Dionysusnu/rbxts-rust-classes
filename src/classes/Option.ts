@@ -18,11 +18,6 @@ lazyGet("Vec", (c) => {
 	Vec = c;
 });
 
-type UnzipOption<O extends Option<defined>> = O extends Option<infer V> ? V : never;
-type UnzipOptionArray<T extends Array<unknown>> = {
-	[K in keyof T]: T[K] extends Option<defined> ? UnzipOption<T[K]> : never;
-};
-
 export class Option<T extends defined> {
 	protected constructor(protected readonly value: T | undefined) {}
 
@@ -124,19 +119,16 @@ export class Option<T extends defined> {
 			: Option.none();
 	}
 
-	public zip<O extends Array<Option<defined>>>(...others: O): Option<[T, ...UnzipOptionArray<O>]> {
-		if (this.isSome() && others.every((o) => o.isSome())) {
-			return Option.some([this.value as T, ...(others.map((o) => o.value!) as UnzipOptionArray<O>)]);
+	public zip<U>(other: Option<U>): Option<[T, U]> {
+		if (this.isSome() && other.isSome()) {
+			return Option.some([this.value as T, other.value as U]);
 		}
 		return Option.none();
 	}
 
-	public zipWith<O extends Array<Option<defined>>, R>(
-		func: (self: T, ...other: UnzipOptionArray<O>) => R,
-		...others: O
-	): Option<R> {
-		if (this.isSome() && others.every((o) => o.isSome())) {
-			return Option.some(func(this.value as T, ...(others.map((o) => o.value!) as UnzipOptionArray<O>)));
+	public zipWith<U, R>(other: Option<U>, func: (self: T, other: U) => R): Option<R> {
+		if (this.isSome() && other.isSome()) {
+			return Option.some(func(this.value as T, other.value as U));
 		}
 		return Option.none();
 	}

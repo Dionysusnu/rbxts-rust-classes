@@ -129,35 +129,24 @@ export = () => {
 	it("Option.zip", () => {
 		expect(Option.some(1).zip(Option.some("string")).unwrap()[0]).to.equal(1);
 		expect(Option.some(1).zip(Option.some("string")).unwrap()[1]).to.equal("string");
-
 		expect(Option.none().zip(Option.some("string"))).to.equal(Option.none());
 		expect(Option.none().zip(Option.none())).to.equal(Option.none());
 		expect(Option.some(1).zip(Option.none())).to.equal(Option.none());
-
-		expect(Option.some(1).zip(Option.some("string"), Option.some(true)).unwrap()[0]).to.equal(1);
-		expect(Option.some(1).zip(Option.some("string"), Option.some(true)).unwrap()[1]).to.equal("string");
-		expect(Option.some(1).zip(Option.some("string"), Option.some(true)).unwrap()[2]).to.equal(true);
-
-		expect(Option.none().zip(Option.some("string"), Option.some(true))).to.equal(Option.none());
-		expect(Option.some(1).zip(Option.some("string"), Option.none())).to.equal(Option.none());
-		expect(Option.some(1).zip(Option.none(), Option.some(true))).to.equal(Option.none());
-		expect(Option.none().zip(Option.none(), Option.none())).to.equal(Option.none());
 	});
 	it("Option.zipWith", () => {
 		expect(
 			Option.some(1)
-				.zipWith((a, b) => [b, a] as const, Option.some("string"))
+				.zipWith(Option.some("string"), (a, b) => [b, a] as const)
 				.unwrap()[0],
 		).to.equal("string");
 		expect(
 			Option.some(1)
-				.zipWith((a, b) => [b, a] as const, Option.some("string"))
+				.zipWith(Option.some("string"), (a, b) => [b, a] as const)
 				.unwrap()[1],
 		).to.equal(1);
-
-		expect(Option.none().zipWith(() => error("Should not run"), Option.some("string"))).to.equal(Option.none());
-		expect(Option.none().zipWith(() => error("Should not run"), Option.none())).to.equal(Option.none());
-		expect(Option.some(1).zipWith(() => error("Should not run"), Option.none())).to.equal(Option.none());
+		expect(Option.none().zipWith(Option.some("string"), () => error("Should not run"))).to.equal(Option.none());
+		expect(Option.none().zipWith(Option.none(), () => error("Should not run"))).to.equal(Option.none());
+		expect(Option.some(1).zipWith(Option.none(), () => error("Should not run"))).to.equal(Option.none());
 	});
 	it("Option.copied", () => {
 		expect(Option.some(1)).to.equal(Option.some(1));
