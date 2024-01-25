@@ -10,9 +10,9 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@rbxts/compiler-types": "^2.0.4-types.0",
+		"@rbxts/compiler-types": "^2.2.0-types.0",
 		"@rbxts/services": "^1.1.2",
 		"@rbxts/testez": "^0.3.1-ts.6",
-		"@rbxts/types": "^1.0.642"
+		"@rbxts/types": "^1.0.744"
 	}
 }

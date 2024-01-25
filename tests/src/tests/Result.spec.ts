@@ -42,25 +42,27 @@ export = () => {
 	});
 	it("Result.fromPromise", () => {
 		expect(Result.fromPromise(new Promise<number>((resolve) => resolve(1))).await()[1]).to.equal(Result.ok(1));
-		expect(Result.fromPromise<defined>(new Promise((_resolve, reject) => reject(1 as never))).await()[1]).to.equal(
+		expect(Result.fromPromise<defined>(new Promise((resolve, reject) => reject(1))).await()[1]).to.equal(
 			Result.err(Option.some(1)),
 		);
-		expect(
-			Result.fromPromise<defined>(new Promise((_resolve, reject) => reject(pairs as never))).await()[1],
-		).to.equal(Result.err(Option.some(pairs)));
-		expect(Result.fromPromise<defined>(new Promise((_resolve, reject) => reject())).await()[1]).to.equal(
+		expect(Result.fromPromise<defined>(new Promise((resolve, reject) => reject(pairs))).await()[1]).to.equal(
+			Result.err(Option.some(pairs)),
+		);
+		expect(Result.fromPromise<defined>(new Promise((resolve, reject) => reject())).await()[1]).to.equal(
 			Result.err<number, Option<number>>(Option.none()),
 		);
 	});
 	it("Result.fromVoidPromise", () => {
-		expect(Result.fromVoidPromise(new Promise((resolve) => resolve())).await()[1]).to.equal(Result.ok(unit()));
-		expect(Result.fromVoidPromise(new Promise((_resolve, reject) => reject(1 as never))).await()[1]).to.equal(
+		expect(Result.fromVoidPromise(new Promise<void>((resolve) => resolve())).await()[1]).to.equal(
+			Result.ok(unit()),
+		);
+		expect(Result.fromVoidPromise(new Promise((resolve, reject) => reject(1))).await()[1]).to.equal(
 			Result.err(Option.some(1)),
 		);
-		expect(Result.fromVoidPromise(new Promise((_resolve, reject) => reject(pairs as never))).await()[1]).to.equal(
+		expect(Result.fromVoidPromise(new Promise((resolve, reject) => reject(pairs))).await()[1]).to.equal(
 			Result.err(Option.some(pairs)),
 		);
-		expect(Result.fromVoidPromise(new Promise((_resolve, reject) => reject())).await()[1]).to.equal(
+		expect(Result.fromVoidPromise(new Promise((resolve, reject) => reject())).await()[1]).to.equal(
 			Result.err<number, Option<number>>(Option.none()),
 		);
 	});

@@ -26,18 +26,18 @@
 		"url": "git+https://github.com/Dionysusnu/rbxts-rust-classes.git"
 	},
 	"devDependencies": {
-		"@rbxts/compiler-types": "^2.0.4-types.0",
+		"@rbxts/compiler-types": "^2.2.0-types.0",
 		"@rbxts/testez": "^0.3.1-ts.6",
-		"@rbxts/types": "^1.0.642",
-		"@typescript-eslint/eslint-plugin": "^5.38.1",
-		"@typescript-eslint/parser": "^5.38.1",
+		"@rbxts/types": "^1.0.744",
+		"@typescript-eslint/eslint-plugin": "^6.19.1",
+		"@typescript-eslint/parser": "^6.19.1",
 		"eslint": "^8.24.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-simple-import-sort": "^8.0.0",
 		"prettier": "^2.7.1",
-		"roblox-ts": "^2.0.4",
-		"typescript": "^4.8.4"
+		"roblox-ts": "^2.2.0",
+		"typescript": "^5.2.2"
 	},
 	"bugs": {
 		"url": "https://github.com/Dionysusnu/rbxts-rust-classes/issues"
