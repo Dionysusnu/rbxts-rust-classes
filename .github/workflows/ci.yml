@@ -33,6 +33,7 @@ jobs:
               run: npm run build
     unit-tests:
         if: false
+        needs: [build]
         name: Unit Tests
         runs-on: windows-latest
         timeout-minutes: 10
