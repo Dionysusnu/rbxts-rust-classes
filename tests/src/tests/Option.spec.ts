@@ -1,6 +1,6 @@
 /// <reference types="@rbxts/testez/globals" />
 
-import { Option, Result, Vec } from "@rbxts/rust-classes";
+import { Option, Result, unit, Vec } from "@rbxts/rust-classes";
 
 export = () => {
 	it("Option.__tostring", () => {
@@ -65,6 +65,19 @@ export = () => {
 	it("Option.map", () => {
 		expect(Option.some(1).map((i) => ++i)).to.equal(Option.some(2));
 		expect(Option.none<number>().map((i) => ++i)).to.equal(Option.none());
+	});
+	it("Option.inspect", () => {
+		let calledSome = 0;
+		let calledNone = 0;
+		Option.some(unit()).inspect((v) => {
+			expect(v).to.equal(unit());
+			calledSome++;
+		});
+		Option.none().inspect(() => {
+			calledNone++;
+		});
+		expect(calledSome).to.equal(1);
+		expect(calledNone).to.equal(0);
 	});
 	it("Option.mapOr", () => {
 		expect(Option.some(1).mapOr(0, (i) => ++i)).to.equal(2);

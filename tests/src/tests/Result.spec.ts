@@ -118,6 +118,32 @@ export = () => {
 		expect(Result.err(1).mapErr((i) => ++i)).to.equal(Result.err(2));
 		expect(Result.ok<number, number>(1).mapErr(() => error("Should not run"))).to.equal(Result.ok(1));
 	});
+	it("Result.inspect", () => {
+		let calledOk = 0;
+		let calledErr = 0;
+		Result.ok(unit()).inspect((v) => {
+			expect(v).to.equal(unit());
+			calledOk++;
+		});
+		Result.err(unit()).inspect(() => {
+			calledErr++;
+		});
+		expect(calledOk).to.equal(1);
+		expect(calledErr).to.equal(0);
+	});
+	it("Result.inspectErr", () => {
+		let calledOk = 0;
+		let calledErr = 0;
+		Result.ok(unit()).inspectErr(() => {
+			calledOk++;
+		});
+		Result.err(unit()).inspectErr((v) => {
+			expect(v).to.equal(unit());
+			calledErr++;
+		});
+		expect(calledOk).to.equal(0);
+		expect(calledErr).to.equal(1);
+	});
 	it("Result.and", () => {
 		expect(Result.ok(1).and(Result.ok(2))).to.equal(Result.ok(2));
 		expect(Result.err(1).and(Result.ok(2))).to.equal(Result.err(1));
