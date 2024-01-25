@@ -4,6 +4,10 @@ name: Publish
 
 on:
     workflow_dispatch:
+        inputs:
+            skiptest:
+                type: boolean
+                description: Skip unit tests
     schedule:
         - cron: "0 7 * * *"
 
@@ -32,6 +36,7 @@ jobs:
               uses: bahmutov/npm-install@v1.7.4
 
             - name: Run tests
+              if: ${{ github.event.inputs.skiptest != true }}
               run: npm test
 
             - name: Publish
