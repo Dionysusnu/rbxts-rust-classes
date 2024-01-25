@@ -8,8 +8,8 @@ on:
             skiptest:
                 type: boolean
                 description: Skip unit tests
-    schedule:
-        - cron: "0 7 * * *"
+    # schedule:
+    #     - cron: "0 7 * * *"
 
 jobs:
     publish:
