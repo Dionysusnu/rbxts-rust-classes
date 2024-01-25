@@ -101,6 +101,16 @@ export class Result<T extends defined, E extends defined> {
 		return this.isErr() ? Result.err(func(this.errValue as E)) : Result.ok(this.okValue as T);
 	}
 
+	public inspect(func: (item: T) => void): this {
+		if (this.isOk()) func(this.okValue as T);
+		return this;
+	}
+
+	public inspectErr(func: (item: E) => void): this {
+		if (this.isErr()) func(this.errValue as E);
+		return this;
+	}
+
 	public and<U extends defined>(other: Result<U, E>): Result<U, E> {
 		return this.isErr() ? Result.err(this.errValue as E) : other;
 	}

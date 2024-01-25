@@ -73,6 +73,11 @@ export class Option<T extends defined> {
 		return this.isSome() ? Option.some(func(this.value as T)) : Option.none();
 	}
 
+	public inspect(func: (item: T) => void): this {
+		if (this.isSome()) func(this.value as T);
+		return this;
+	}
+
 	public mapOr<U>(def: U, func: (item: T) => U): U {
 		return this.isSome() ? func(this.value as T) : def;
 	}
