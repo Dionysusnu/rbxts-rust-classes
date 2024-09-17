@@ -49,4 +49,4 @@ jobs:
               uses: bahmutov/npm-install@v1.7.4
 
             - name: Run tests
-              run: npm test
+              run: npm run test-lune
