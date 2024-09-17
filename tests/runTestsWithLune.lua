@@ -1,0 +1,70 @@
+-- Taken and modified from roblox-ts under the MIT license
+-- https://github.com/roblox-ts/roblox-ts/blob/835d1959860b45a7cdf520f7d4dd2b16a1477c94/tests/runTestsWithLune.lua
+
+local roblox = require("@lune/roblox")
+local fs = require("@lune/fs")
+local luau = require("@lune/luau")
+local process = require("@lune/process")
+
+local testPlacePath = process.args[1]
+
+local game = roblox.deserializePlace(fs.readFile(testPlacePath))
+
+local function tableJoin(...)
+	local result = {}
+	for i = 1, select("#", ...) do
+		for k, v in select(i, ...) do
+			result[k] = v
+		end
+	end
+	return result
+end
+
+-- not 100% accurate to tick() functionality, but good enough for TestEZ usage
+local function tick()
+	return os.clock()
+end
+
+-- RuntimeLib uses :WaitForChild(), but tests don't need networking so :FindFirstChild() should be fine
+roblox.implementMethod("Instance", "WaitForChild", function(self, ...)
+	return self:FindFirstChild(...)
+end)
+
+-- Promise.lua indexes RunService.Heartbeat, but only uses it in Promise.defer and Promise.delay
+roblox.implementProperty("RunService", "Heartbeat", function()
+	return {}
+end, function() end)
+
+local robloxRequire
+
+local function runRobloxScript(script: LuaSourceContainer)
+	local callableFn = luau.load(luau.compile(script.Source), {
+		debugName = script:GetFullName(),
+		environment = tableJoin(roblox, {
+			game = game,
+			script = script,
+			require = robloxRequire,
+			tick = tick,
+		}),
+	})
+
+	return callableFn()
+end
+
+local requireCache = {}
+
+function robloxRequire(moduleScript: ModuleScript)
+	-- the same script instance sometimes gives a different ref
+	-- unsure why, but using :GetFullName() fixes this for now
+	local scriptPath = moduleScript:GetFullName()
+	local cached = requireCache[scriptPath]
+	if cached then
+		return table.unpack(cached)
+	end
+
+	local result = table.pack(runRobloxScript(moduleScript))
+	requireCache[scriptPath] = result
+	return table.unpack(result)
+end
+
+runRobloxScript(game.ServerScriptService.main)
