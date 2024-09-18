@@ -51,6 +51,42 @@ export = () => {
 		expect(b.take()).to.equal(Option.none());
 		expect(b).to.equal(OptionMut.none());
 	});
+	it("OptionMut.takeIf", () => {
+		const a = OptionMut.some(1);
+		let aCalled = 0;
+		expect(
+			a.takeIf((x) => {
+				aCalled++;
+				expect(x).to.equal(1);
+				return true;
+			}),
+		).to.equal(Option.some(1));
+		expect(a).to.equal(OptionMut.none());
+		expect(aCalled).to.equal(1);
+
+		const b = OptionMut.some(1);
+		let bCalled = 0;
+		expect(
+			b.takeIf((x) => {
+				bCalled++;
+				expect(x).to.equal(1);
+				return false;
+			}),
+		).to.equal(Option.none());
+		expect(b).to.equal(OptionMut.some(1));
+		expect(bCalled).to.equal(1);
+
+		const c = OptionMut.none();
+		let cCalled = 0;
+		expect(
+			c.takeIf((x) => {
+				cCalled++;
+				return true;
+			}),
+		).to.equal(Option.none());
+		expect(c).to.equal(OptionMut.none());
+		expect(cCalled).to.equal(0);
+	});
 	it("OptionMut.replace", () => {
 		const a = OptionMut.some(1);
 		expect(a.replace(2)).to.equal(Option.some(1));

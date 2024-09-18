@@ -73,6 +73,19 @@ export class OptionMut<T extends defined> extends Option<T> {
 		return Option.wrap(val);
 	}
 
+	/**
+	 * Modifiying `value` only works correctly if the value is a reference.
+	 * Use `[number]` as your value if you want to store and modify a primitive type.
+	 */
+	public takeIf(predicate: (value: T) => boolean): OptionType<T> {
+		const val = this.value;
+		if (val !== undefined && predicate(val)) {
+			this.value = undefined;
+			return Option.some(val);
+		}
+		return Option.none();
+	}
+
 	public replace(val: T): OptionType<T> {
 		const oldVal = this.value;
 		this.value = val;
