@@ -5,6 +5,7 @@ local roblox = require("@lune/roblox")
 local fs = require("@lune/fs")
 local luau = require("@lune/luau")
 local process = require("@lune/process")
+local stdio = require("@lune/stdio")
 
 local testPlacePath = process.args[1]
 
@@ -28,6 +29,11 @@ end
 -- RuntimeLib uses :WaitForChild(), but tests don't need networking so :FindFirstChild() should be fine
 roblox.implementMethod("Instance", "WaitForChild", function(self, ...)
 	return self:FindFirstChild(...)
+end)
+
+-- TestEZ uses TestService:Error() when tests fail
+roblox.implementMethod("TestService", "Error", function(self, description: string, source: Instance?, line: number?)
+	stdio.ewrite(`{description}\n`)
 end)
 
 -- Promise.lua indexes RunService.Heartbeat, but only uses it in Promise.defer and Promise.delay
