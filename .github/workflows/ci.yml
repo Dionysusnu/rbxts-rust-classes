@@ -34,7 +34,7 @@ jobs:
     unit-tests:
         needs: [build]
         name: Unit Tests
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
             - name: Checkout repository
